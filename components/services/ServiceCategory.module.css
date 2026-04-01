@@ -1,0 +1,36 @@
+.section { padding: 72px 0; }
+.section:nth-child(even) { background: var(--cream); }
+
+.header { display: flex; align-items: center; gap: 16px; margin-bottom: 40px; }
+.catIcon {
+  width: 52px; height: 52px;
+  background: linear-gradient(135deg, var(--gold-dark), var(--gold));
+  border-radius: var(--radius-md);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.4rem; flex-shrink: 0;
+  box-shadow: 0 4px 14px rgba(168,134,90,0.35);
+}
+.catLabel {
+  display: block;
+  font-size: 0.66rem; font-weight: 700;
+  letter-spacing: 3px; text-transform: uppercase;
+  color: var(--gold-dark); margin-bottom: 3px;
+}
+
+.subLabel {
+  display: inline-block;
+  font-size: 0.7rem; font-weight: 700;
+  letter-spacing: 2.5px; text-transform: uppercase;
+  color: var(--gold-dark);
+  padding: 5px 14px;
+  background: var(--gold-pale);
+  border-radius: 50px;
+  border: 1px solid var(--gold-light);
+  margin: 28px 0 14px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+  gap: 18px;
+}
