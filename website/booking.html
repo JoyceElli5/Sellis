@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Book your appointment at Sellis Beauty Spa. Quick, easy booking — we confirm via WhatsApp." />
+  <title>Book an Appointment | Sellis Beauty Spa</title>
+
+  <link rel="icon" type="image/png" href="assets/logo.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=Raleway:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <!-- ══════════════════════════════════════════════════════
+       NAVIGATION
+  ══════════════════════════════════════════════════════════ -->
+  <nav class="nav scrolled" id="main-nav" aria-label="Main navigation">
+    <div class="nav-inner">
+      <a href="index.html" class="nav-logo" aria-label="Sellis Beauty Spa home">
+        <img src="assets/logo.png" alt="Sellis Beauty Spa Logo" />
+        <div class="nav-logo-text">
+          <span class="nav-logo-name">SELLIS</span>
+          <span class="nav-logo-sub">Beauty Spa</span>
+        </div>
+      </a>
+      <ul class="nav-links" role="list">
+        <li><a href="index.html"    class="nav-link">Home</a></li>
+        <li><a href="services.html" class="nav-link">Services</a></li>
+        <li><a href="booking.html"  class="nav-link active">Booking</a></li>
+        <li><a href="contact.html"  class="nav-link">Contact</a></li>
+        <li><a href="booking.html"  class="nav-book">Book Now</a></li>
+      </ul>
+      <button class="hamburger" aria-label="Open menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <div class="nav-mobile" role="navigation" aria-label="Mobile navigation">
+    <a href="index.html"    class="nav-link">Home</a>
+    <a href="services.html" class="nav-link">Services</a>
+    <a href="booking.html"  class="nav-link active">Booking</a>
+    <a href="contact.html"  class="nav-link">Contact</a>
+    <a href="booking.html"  class="nav-book">Book Appointment</a>
+  </div>
+
+
+  <!-- ══════════════════════════════════════════════════════
+       PAGE HERO
+  ══════════════════════════════════════════════════════════ -->
+  <header class="page-hero" aria-label="Page header">
+    <div class="container" style="position:relative;z-index:2;">
+      <span class="page-hero-label">Sellis Beauty Spa</span>
+      <h1>Book Your Appointment</h1>
+      <p>Fill in the form below and we'll confirm your booking on WhatsApp. It only takes a minute.</p>
+    </div>
+  </header>
+
+
+  <!-- ══════════════════════════════════════════════════════
+       BOOKING SECTION
+  ══════════════════════════════════════════════════════════ -->
+  <main class="booking-section">
+    <div class="container">
+      <div class="booking-layout">
+
+        <!-- ── Booking Form ─────────────────────────────── -->
+        <div class="booking-form-wrap fade-in-left">
+          <h2>Reserve Your Spot</h2>
+          <p>All fields marked <span style="color:var(--gold-dark)">*</span> are required.</p>
+
+          <form id="booking-form" novalidate>
+
+            <!-- Name & Phone -->
+            <div class="form-row">
+              <div class="form-group">
+                <label for="name">Full Name <span style="color:var(--gold-dark)">*</span></label>
+                <input type="text" id="name" name="name"
+                       placeholder="Your full name"
+                       required autocomplete="name" />
+              </div>
+              <div class="form-group">
+                <label for="phone">Phone Number <span style="color:var(--gold-dark)">*</span></label>
+                <input type="tel" id="phone" name="phone"
+                       placeholder="+233 XX XXX XXXX"
+                       required autocomplete="tel" />
+              </div>
+            </div>
+
+            <!-- Service -->
+            <div class="form-group">
+              <label for="service">Service <span style="color:var(--gold-dark)">*</span></label>
+              <select id="service" name="service" required>
+                <!-- Populated by booking.js -->
+              </select>
+            </div>
+
+            <!-- Date & Time -->
+            <div class="form-row">
+              <div class="form-group">
+                <label for="date">Preferred Date <span style="color:var(--gold-dark)">*</span></label>
+                <input type="date" id="date" name="date" required />
+              </div>
+              <div class="form-group">
+                <label for="time">Preferred Time <span style="color:var(--gold-dark)">*</span></label>
+                <input type="time" id="time" name="time"
+                       min="08:00" max="20:00" required />
+              </div>
+            </div>
+
+            <!-- Notes -->
+            <div class="form-group">
+              <label for="notes">Additional Notes</label>
+              <textarea id="notes" name="notes"
+                placeholder="Any special requests, allergies or details we should know…"></textarea>
+            </div>
+
+            <!-- Submit -->
+            <button type="submit" class="form-submit">
+              <span>📲</span>
+              Send Booking via WhatsApp
+            </button>
+
+          </form>
+        </div>
+
+
+        <!-- ── Booking Sidebar ──────────────────────────── -->
+        <aside class="booking-sidebar fade-in-right">
+
+          <!-- WhatsApp note -->
+          <div class="whatsapp-note">
+            <span class="wa-icon">📲</span>
+            <span>
+              When you click <strong>Send Booking</strong>, WhatsApp will open
+              with your details pre-filled. Simply hit <em>Send</em> and we'll
+              confirm your appointment shortly.
+            </span>
+          </div>
+
+          <!-- Opening Hours -->
+          <div class="info-card">
+            <div class="info-card-head">
+              <div class="info-card-icon">🕐</div>
+              <h4>Opening Hours</h4>
+            </div>
+            <ul>
+              <li><span>Monday – Friday</span> <strong>8:00 AM – 8:00 PM</strong></li>
+              <li><span>Saturday</span>         <strong>8:00 AM – 8:00 PM</strong></li>
+              <li><span>Sunday</span>           <strong>10:00 AM – 6:00 PM</strong></li>
+            </ul>
+          </div>
+
+          <!-- Location -->
+          <div class="info-card">
+            <div class="info-card-head">
+              <div class="info-card-icon">📍</div>
+              <h4>Find Us</h4>
+            </div>
+            <p>Accra, Ghana<br />
+               <a href="https://wa.me/233XXXXXXXXX" target="_blank" rel="noopener"
+                  style="color:var(--gold-dark);font-weight:600;text-decoration:none;">
+                 💬 Message us on WhatsApp
+               </a>
+            </p>
+          </div>
+
+          <!-- Policies -->
+          <div class="info-card">
+            <div class="info-card-head">
+              <div class="info-card-icon">📋</div>
+              <h4>Booking Policy</h4>
+            </div>
+            <ul>
+              <li><span>Cancellations</span>   <strong>24 hrs notice</strong></li>
+              <li><span>Late arrivals</span>    <strong>15 min grace</strong></li>
+              <li><span>Deposit</span>          <strong>Some services</strong></li>
+              <li><span>Walk-ins</span>         <strong>Subject to availability</strong></li>
+            </ul>
+          </div>
+
+          <!-- CTA to view services -->
+          <a href="services.html" class="btn btn-outline" style="text-align:center;display:block;">
+            Browse All Services
+          </a>
+
+        </aside>
+      </div>
+    </div>
+  </main>
+
+
+  <!-- ══════════════════════════════════════════════════════
+       FOOTER
+  ══════════════════════════════════════════════════════════ -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <div class="footer-logo">
+            <img src="assets/logo.png" alt="Sellis Beauty Spa" />
+            <div>
+              <span class="footer-logo-name">SELLIS</span>
+              <span class="footer-logo-sub">Beauty Spa</span>
+            </div>
+          </div>
+          <p>Your sanctuary for luxury beauty, wellness, and relaxation.</p>
+          <div class="social-links">
+            <a href="https://instagram.com/sellisbeautyspa" class="social-link" target="_blank" rel="noopener" aria-label="Instagram">📷</a>
+            <a href="https://wa.me/233XXXXXXXXX"            class="social-link" target="_blank" rel="noopener" aria-label="WhatsApp">💬</a>
+            <a href="https://facebook.com/sellisbeautyspa"  class="social-link" target="_blank" rel="noopener" aria-label="Facebook">📘</a>
+          </div>
+        </div>
+        <div class="footer-col">
+          <h5>Quick Links</h5>
+          <nav class="footer-links">
+            <a href="index.html">Home</a>
+            <a href="services.html">Services</a>
+            <a href="booking.html">Book Appointment</a>
+            <a href="contact.html">Contact Us</a>
+          </nav>
+        </div>
+        <div class="footer-col">
+          <h5>Services</h5>
+          <nav class="footer-links">
+            <a href="services.html#cat-hair">Hair Services</a>
+            <a href="services.html#cat-facials">Facials</a>
+            <a href="services.html#cat-spa">Spa &amp; Massage</a>
+            <a href="services.html#cat-nails">Nails</a>
+            <a href="services.html#cat-waxing">Waxing</a>
+            <a href="services.html#cat-lashes">Lashes &amp; Brows</a>
+          </nav>
+        </div>
+        <div class="footer-col">
+          <h5>Contact Us</h5>
+          <div class="footer-contact-list">
+            <div class="footer-contact-item"><span class="fi">📍</span><span>Accra, Ghana</span></div>
+            <div class="footer-contact-item"><span class="fi">📞</span><span>+233 XX XXX XXXX</span></div>
+            <div class="footer-contact-item"><span class="fi">📷</span><a href="https://instagram.com/sellisbeautyspa" target="_blank" rel="noopener" style="color:inherit;">@sellisbeautyspa</a></div>
+            <div class="footer-contact-item"><span class="fi">🕐</span><span>Mon–Sat: 8am – 8pm<br />Sun: 10am – 6pm</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2025 Sellis Beauty Spa. All rights reserved.</p>
+        <p>Crafted with 💛 for beauty lovers</p>
+      </div>
+    </div>
+  </footer>
+
+
+  <script src="js/data.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/booking.js"></script>
+</body>
+</html>
