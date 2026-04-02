@@ -14,9 +14,7 @@ export default function ServiceCategory({ category }: ServiceCategoryProps) {
     >
       <div className="container">
         <div className="mb-10 flex items-center gap-4">
-          <div className="flex h-[52px] w-[52px] shrink-0 items-center justify-center rounded-spa-md bg-gradient-to-br from-gold-dark to-gold text-2xl shadow-[0_4px_14px_rgba(168,134,90,0.35)]">
-            {category.icon}
-          </div>
+          <div className="flex h-[52px] w-[52px] shrink-0 items-center justify-center rounded-spa-md bg-gradient-to-br from-gold-dark to-gold shadow-[0_4px_14px_rgba(168,134,90,0.35)]" />
           <div>
             <span className="mb-0.5 block text-[0.66rem] font-bold uppercase tracking-[3px] text-gold-dark">
               Our Services

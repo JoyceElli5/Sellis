@@ -1,7 +1,7 @@
 import Link from 'next/link';
 
 const HERO_IMAGE =
-  'https://media.istockphoto.com/id/1321544366/photo/hair-stylist-in-brazil.jpg?s=1024x1024&w=is&k=20&c=0lXcyCGhhLOV86pM3r4pq6c5Wrc2aWTcguKLYEVCnEc=';
+  'https://plus.unsplash.com/premium_photo-1733342654514-820af792c969?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8YWZyaWNhbiUyMGhhaXIlMjBzYWxvbnxlbnwwfHwwfHx8MA%3D%3D';
 
 export default function Hero() {
   return (
