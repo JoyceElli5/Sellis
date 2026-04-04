@@ -22,3 +22,11 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+
+.claude
+.next
+.env
+server/target
+server/client/node_modules
+server/client/.env
