@@ -5,8 +5,6 @@ import FeaturedServices from '@/components/home/FeaturedServices';
 import WhyUs from '@/components/home/WhyUs';
 import Testimonials from '@/components/home/Testimonials';
 import CtaSection from '@/components/home/CtaSection';
-import Navbar from '@/components/layout/Navbar';
-import Footer from '@/components/layout/Footer';
 import AnnouncementModal from '@/components/AnnouncementModal';
 
 export const metadata: Metadata = {
@@ -19,15 +17,12 @@ export default function HomePage() {
   return (
     <main>
       <AnnouncementModal />
-      <Navbar />
-
       <Hero />
       {/* <Intro /> */}
       <FeaturedServices />
       {/* <WhyUs /> */}
       {/* <Testimonials /> */}
       <CtaSection />
-       <Footer />
     </main>
   );
 }

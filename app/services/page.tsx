@@ -30,49 +30,65 @@ export default function ServicesPage() {
 
       {/* ── Page hero ──────────────────────────────────────── */}
       <div
+        className="relative overflow-hidden"
         style={{
-          paddingTop: "calc(var(--nav-height) + 56px)",
-          paddingBottom: 56,
+          paddingTop: "calc(var(--nav-height) + 64px)",
+          paddingBottom: 72,
           textAlign: "center",
-          background: "linear-gradient(180deg, #faf5ef 0%, #f0e4d4 100%)",
-          borderBottom: "1px solid #e8d9c4",
+          background: "linear-gradient(150deg,#1a0e09_0%,#3D2B1F_35%,#7A5040_65%,#C9A870_100%)",
+          borderBottom: "1px solid rgba(255,255,255,0.1)",
         }}
       >
-        <span
-          style={{
-            fontSize: "0.68rem",
-            fontWeight: 700,
-            letterSpacing: "3px",
-            textTransform: "uppercase",
-            color: "#a8865a",
-            display: "block",
-            marginBottom: 10,
-          }}
-        >
-          Sellis Beauty Spa
-        </span>
-        <h1
-          style={{
-            fontFamily: "var(--font-playfair, serif)",
-            fontSize: "clamp(2rem, 5vw, 3rem)",
-            fontWeight: 700,
-            color: "#2c1810",
-            margin: "0 0 14px",
-          }}
-        >
-          Our Services &amp; Pricing
-        </h1>
-        <p
-          style={{
-            fontSize: "1rem",
-            color: "#6b4c3b",
-            maxWidth: 520,
-            margin: "0 auto",
-            lineHeight: 1.65,
-          }}
-        >
-          Browse our full menu of luxury beauty treatments. Every price includes expert care and premium products.
-        </p>
+        <div
+          className="absolute inset-0 z-0 bg-cover bg-center bg-no-repeat"
+          style={{ backgroundImage: `url('https://plus.unsplash.com/premium_photo-1733342654514-820af792c969?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8YWZyaWNhbiUyMGhhaXIlMjBzYWxvbnxlbnwwfHwwfHx8MA%3D%3D')` }}
+          aria-hidden
+        />
+        <div className="absolute inset-0 z-[1] bg-black/60" aria-hidden />
+        <div
+          className="absolute inset-0 z-[2] bg-gradient-to-br from-[rgba(26,14,9,0.7)] via-[rgba(61,43,31,0.5)] to-[rgba(168,134,90,0.2)]"
+          aria-hidden
+        />
+
+        <div style={{ position: "relative", zIndex: 4, padding: "0 24px" }}>
+          <span
+            style={{
+              fontSize: "0.68rem",
+              fontWeight: 700,
+              letterSpacing: "3px",
+              textTransform: "uppercase",
+              color: "#e2c598",
+              display: "block",
+              marginBottom: 10,
+            }}
+          >
+            Sellis Beauty Spa
+          </span>
+          <h1
+            style={{
+              fontFamily: "var(--font-playfair, serif)",
+              fontSize: "clamp(2rem, 5vw, 3rem)",
+              fontWeight: 700,
+              color: "#ffffff",
+              margin: "0 0 14px",
+              textShadow: "0 2px 14px rgba(0,0,0,0.45)",
+            }}
+          >
+            Our Services &amp; Pricing
+          </h1>
+          <p
+            style={{
+              fontSize: "1.05rem",
+              fontWeight: 300,
+              color: "rgba(255,255,255,0.85)",
+              maxWidth: 520,
+              margin: "0 auto",
+              lineHeight: 1.65,
+            }}
+          >
+            Browse our full menu of luxury beauty treatments. Every price includes expert care and premium products.
+          </p>
+        </div>
       </div>
 
       {/* ── Sticky category tabs ───────────────────────────── */}

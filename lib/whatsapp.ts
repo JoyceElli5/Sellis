@@ -1,10 +1,10 @@
 /**
  * Sellis Beauty Spa — WhatsApp Utilities
  *
- * IMPORTANT: Replace WHATSAPP_NUMBER with the real Ghana number, e.g. '233201234567'
+ * IMPORTANT: Set NEXT_PUBLIC_WHATSAPP_NUMBER in your .env file to the real Ghana number, e.g. '233201234567'
  */
 
-export const WHATSAPP_NUMBER = '233XXXXXXXXX';
+export const WHATSAPP_NUMBER = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || '233XXXXXXXXX';
 
 export type BookingMessageFields = {
   name: string;

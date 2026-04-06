@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { usePathname, useRouter } from 'next/navigation';
 import { useNavScroll } from '@/hooks/useNavScroll';
 
 const links = [
@@ -15,6 +16,8 @@ const links = [
 export default function Navbar() {
   const scrolled = useNavScroll(60);
   const [open, setOpen] = useState(false);
+  const pathname = usePathname();
+  const router = useRouter();
 
   const toggle = () => setOpen((v) => !v);
   const close = () => setOpen(false);
@@ -36,33 +39,50 @@ export default function Navbar() {
     <>
       <nav className={`${navBase} ${navState}`} aria-label="Main">
         <div className="mx-auto flex h-full max-w-[1400px] items-center justify-between px-11 max-md:px-5">
-          <Link
-            href="/"
-            className="flex shrink-0 items-center gap-3"
-            onClick={close}
-            aria-label="Sellis Beauty Spa home"
-          >
-            <Image
-              src="/logo.png"
-              alt="Sellis Beauty Spa"
-              width={54}
-              height={54}
-              className="h-[54px] w-auto rounded object-contain"
-              priority
-            />
-            <div className="flex flex-col leading-tight">
-              <span
-                className={`font-serif text-xl font-bold tracking-[2px] transition-colors duration-400 ${logoName}`}
+          <div className="flex items-center gap-2.5 md:gap-4 shrink-0">
+            {pathname !== '/' && (
+              <button
+                onClick={() => router.back()}
+                aria-label="Go back"
+                className={`flex h-[34px] w-[34px] md:h-9 md:w-9 items-center justify-center rounded-full transition-all ${
+                  scrolled 
+                    ? 'bg-brown-dark/5 text-brown-dark hover:bg-gold hover:text-white' 
+                    : 'bg-white/10 text-white hover:bg-gold'
+                }`}
               >
-                SELLIS
-              </span>
-              <span
-                className={`text-[0.58rem] font-bold uppercase tracking-[3px] transition-colors duration-400 ${logoSub}`}
-              >
-                Beauty Spa
-              </span>
-            </div>
-          </Link>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M15 18l-6-6 6-6" />
+                </svg>
+              </button>
+            )}
+            <Link
+              href="/"
+              className="flex items-center gap-3"
+              onClick={close}
+              aria-label="Sellis Beauty Spa home"
+            >
+              <Image
+                src="/logo.png"
+                alt="Sellis Beauty Spa"
+                width={54}
+                height={54}
+                className="h-[54px] w-auto rounded object-contain"
+                priority
+              />
+              <div className="flex flex-col leading-tight">
+                <span
+                  className={`font-serif text-xl font-bold tracking-[2px] transition-colors duration-400 ${logoName}`}
+                >
+                  SELLIS
+                </span>
+                <span
+                  className={`text-[0.58rem] font-bold uppercase tracking-[3px] transition-colors duration-400 ${logoSub}`}
+                >
+                  Beauty Spa
+                </span>
+              </div>
+            </Link>
+          </div>
 
           <ul className="hidden list-none items-center gap-[38px] md:flex">
             {links.map((l) => (

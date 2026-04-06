@@ -175,9 +175,9 @@ function ServiceCard({
           position: "absolute",
           inset: 0,
           background: category.gradient,
-          transition: "transform 0.5s ease",
+          transition: "transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94)",
         }}
-        className="group-hover:scale-105"
+        className="group-hover:scale-110"
       >
         <Image
           src={image}
@@ -254,10 +254,10 @@ function ServiceCard({
             {price}
           </p>
 
-          {/* Two buttons — slide up on hover */}
+          {/* Two buttons — slide from right to left on hover */}
           <div
-            className="translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100"
-            style={{ display: "flex", gap: 8, transition: "all 0.3s ease" }}
+            className="translate-x-6 opacity-0 group-hover:translate-x-0 group-hover:opacity-100"
+            style={{ display: "flex", gap: 8, transition: "all 0.4s ease-out" }}
           >
             <Link
               href={bookHref}

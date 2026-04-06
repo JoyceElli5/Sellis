@@ -32,9 +32,9 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en" className={`${playfair.variable} ${raleway.variable}`}>
       <body>
-        
+        <Navbar />
         {children}
-       
+        <Footer />
       </body>
     </html>
   );

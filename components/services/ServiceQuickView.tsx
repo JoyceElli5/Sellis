@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import type { ServiceCategoryData } from "@/data/services";
@@ -11,12 +11,29 @@ interface ServiceQuickViewProps {
   category: ServiceCategoryData | null;
 }
 
-export default function ServiceQuickView({ isOpen, onClose, category }: ServiceQuickViewProps) {
+export default function ServiceQuickView({ isOpen, onClose, category: incomingCategory }: ServiceQuickViewProps) {
+  const [show, setShow] = useState(false);
+  const [category, setCategory] = useState<ServiceCategoryData | null>(null);
+
+  useEffect(() => {
+    if (isOpen && incomingCategory) {
+      setCategory(incomingCategory);
+      // Small delay ensures the component renders off-screen before sliding in
+      const t = setTimeout(() => setShow(true), 10);
+      return () => clearTimeout(t);
+    } else {
+      setShow(false);
+      // Wait for the 0.5s CSS transition to finish before unmounting from the DOM
+      const t = setTimeout(() => setCategory(null), 500);
+      return () => clearTimeout(t);
+    }
+  }, [isOpen, incomingCategory]);
+
   // Lock body scroll while open
   useEffect(() => {
-    document.body.style.overflow = isOpen ? "hidden" : "";
+    document.body.style.overflow = show ? "hidden" : "";
     return () => { document.body.style.overflow = ""; };
-  }, [isOpen]);
+  }, [show]);
 
   if (!category) return null;
 
@@ -32,8 +49,8 @@ export default function ServiceQuickView({ isOpen, onClose, category }: ServiceQ
           inset: 0,
           background: "rgba(44,24,16,0.55)",
           zIndex: 400,
-          opacity: isOpen ? 1 : 0,
-          pointerEvents: isOpen ? "auto" : "none",
+          opacity: show ? 1 : 0,
+          pointerEvents: show ? "auto" : "none",
           transition: "opacity 0.3s ease",
         }}
       />
@@ -52,8 +69,8 @@ export default function ServiceQuickView({ isOpen, onClose, category }: ServiceQ
           display: "flex",
           flexDirection: "column",
           boxShadow: "-8px 0 40px rgba(44,24,16,0.18)",
-          transform: isOpen ? "translateX(0)" : "translateX(100%)",
-          transition: "transform 0.35s cubic-bezier(0.4,0,0.2,1)",
+          transform: show ? "translateX(0)" : "translateX(100%)",
+          transition: "transform 0.5s cubic-bezier(0.16, 1, 0.3, 1)",
         }}
       >
         {/* Category Hero */}
