@@ -1,0 +1,17 @@
+#!/bin/sh
+# Maven Wrapper script
+# Copyright 2007-2021 The Apache Software Foundation
+
+set -e
+
+if [ -z "$JAVA_HOME" ] ; then
+  JAVACMD="java"
+else
+  JAVACMD="$JAVA_HOME/bin/java"
+fi
+
+WRAPPER_JAR="$(dirname "$0")/.mvn/wrapper/maven-wrapper.jar"
+
+exec "$JAVACMD" \
+  $MAVEN_OPTS \
+  -jar "$WRAPPER_JAR" "$@"
