@@ -135,6 +135,104 @@ If the backend starts before MongoDB is ready, the database won't be seeded and 
 
 ---
 
+## Deploying the Backend to Railway
+
+### 1. Create Railway Config Files
+
+In the `server/` directory, create the following files:
+
+**`system.properties`** — tells Railway which Java version to use:
+
+```
+java.runtime.version=21
+```
+
+**`Procfile`** — tells Railway how to run the app:
+
+```
+web: java -jar -Dserver.port=$PORT target/server-1.0.0.jar
+```
+
+### 2. Set Up MongoDB on Railway
+
+Railway doesn't have a built-in MongoDB plugin anymore. Use **MongoDB Atlas** (free tier):
+
+1. Go to [MongoDB Atlas](https://www.mongodb.com/cloud/atlas) and create a free cluster
+2. Create a database user and whitelist `0.0.0.0/0` (allow all IPs)
+3. Get the connection string — it looks like:
+   ```
+   mongodb+srv://<username>:<password>@cluster0.xxxxx.mongodb.net/sellis?retryWrites=true&w=majority
+   ```
+
+### 3. Create the Railway Project
+
+1. Install the Railway CLI:
+   ```powershell
+   npm install -g @railway/cli
+   ```
+
+2. Login to Railway:
+   ```powershell
+   railway login
+   ```
+
+3. Initialize a new project from the `server/` directory:
+   ```powershell
+   cd C:\Users\Administrator\Sellis\server
+   railway init
+   ```
+
+4. Link to your GitHub repo (or deploy directly):
+   ```powershell
+   railway link
+   ```
+
+### 4. Set Environment Variables
+
+In the Railway dashboard (or via CLI), set these variables:
+
+```powershell
+railway variables set MONGO_URI="mongodb+srv://<username>:<password>@cluster0.xxxxx.mongodb.net/sellis?retryWrites=true&w=majority"
+railway variables set JWT_SECRET="<your-base64-encoded-256-bit-key>"
+railway variables set ADMIN_EMAIL="admin@sellis.com"
+railway variables set ADMIN_PASSWORD="<a-strong-password>"
+```
+
+> **Important:** Use a strong, unique `JWT_SECRET` and `ADMIN_PASSWORD` in production. Do not use the defaults.
+
+### 5. Configure the Build
+
+Railway auto-detects Maven projects. Make sure the root directory is set to `server/` in the Railway dashboard:
+
+- Go to **Settings > Build** in your Railway service
+- Set **Root Directory** to `server`
+- Build command (auto-detected): `mvn -DskipTests clean package`
+- Start command: `java -jar -Dserver.port=$PORT target/server-1.0.0.jar`
+
+### 6. Deploy
+
+```powershell
+cd C:\Users\Administrator\Sellis\server
+railway up
+```
+
+Or push to your linked GitHub repo — Railway will auto-deploy.
+
+### 7. Verify
+
+Once deployed, Railway gives you a public URL like `https://sellis-server-production.up.railway.app`.
+
+Test it:
+```powershell
+curl https://<your-railway-url>/api/categories
+```
+
+### 8. Update the CMS to Point to Railway
+
+After deploying, update the CMS proxy in `server/client/vite.config.js` for local dev to keep pointing at localhost. For a production CMS build, set the API base URL to your Railway URL.
+
+---
+
 ## Troubleshooting
 
 ### `mvn` is not recognized
