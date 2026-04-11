@@ -233,6 +233,39 @@ After deploying, update the CMS proxy in `server/client/vite.config.js` for loca
 
 ---
 
+## Health Check Endpoints
+
+The backend exposes a few unauthenticated health endpoints for monitoring and uptime checks. They're useful for Railway health checks, external uptime monitors, and debugging deployments.
+
+| Endpoint | Description | Example Response |
+|----------|-------------|------------------|
+| `GET /api/health` | Basic liveness — confirms the app is running | `{"success":true,"data":{"status":"UP","service":"sellis-server","timestamp":"..."}}` |
+| `GET /api/health/ping` | Simple pong response | `{"success":true,"data":{"message":"pong"}}` |
+| `GET /api/health/db` | MongoDB connectivity check (returns 503 if DB unreachable) | `{"success":true,"data":{"database":"mongodb","status":"UP"}}` |
+| `GET /api/health/info` | Service info — uptime, Java version, memory usage | `{"success":true,"data":{"service":"sellis-server","startedAt":"...","uptimeSeconds":42,"javaVersion":"21.0.2","memoryMaxMb":30208,"memoryUsedMb":46}}` |
+
+### Quick test (local)
+
+```powershell
+curl http://localhost:8080/api/health
+curl http://localhost:8080/api/health/ping
+curl http://localhost:8080/api/health/db
+curl http://localhost:8080/api/health/info
+```
+
+### Quick test (Railway)
+
+```powershell
+curl https://sellis-server-production.up.railway.app/api/health
+curl https://sellis-server-production.up.railway.app/api/health/ping
+curl https://sellis-server-production.up.railway.app/api/health/db
+curl https://sellis-server-production.up.railway.app/api/health/info
+```
+
+> All four endpoints are public — no `Authorization` header required.
+
+---
+
 ## Troubleshooting
 
 ### `mvn` is not recognized
