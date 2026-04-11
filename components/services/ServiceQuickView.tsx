@@ -3,16 +3,30 @@
 import { useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import type { ServiceCategoryData } from "@/data/services";
+import type { ApiService } from "@/lib/api/types";
+import { formatPrice } from "@/lib/api/types";
+import type { CategoryMeta } from "@/lib/categoryMeta";
+
+export interface QuickViewCategory {
+  id: string;
+  name: string;
+  description: string | null;
+  meta: CategoryMeta;
+}
 
 interface ServiceQuickViewProps {
   isOpen: boolean;
   onClose: () => void;
-  category: ServiceCategoryData | null;
+  category: QuickViewCategory | null;
+  services: ApiService[];
 }
 
-export default function ServiceQuickView({ isOpen, onClose, category }: ServiceQuickViewProps) {
-  // Lock body scroll while open
+export default function ServiceQuickView({
+  isOpen,
+  onClose,
+  category,
+  services,
+}: ServiceQuickViewProps) {
   useEffect(() => {
     document.body.style.overflow = isOpen ? "hidden" : "";
     return () => { document.body.style.overflow = ""; };
@@ -20,7 +34,7 @@ export default function ServiceQuickView({ isOpen, onClose, category }: ServiceQ
 
   if (!category) return null;
 
-  const bookHref = `/booking?service=${encodeURIComponent(category.title)}`;
+  const bookHref = `/booking?service=${encodeURIComponent(category.name)}`;
 
   return (
     <>
@@ -56,25 +70,23 @@ export default function ServiceQuickView({ isOpen, onClose, category }: ServiceQ
           transition: "transform 0.35s cubic-bezier(0.4,0,0.2,1)",
         }}
       >
-        {/* Category Hero */}
+        {/* Hero */}
         <div
           style={{
             position: "relative",
             height: 180,
             flexShrink: 0,
-            background: category.gradient,
+            background: category.meta.gradient,
             overflow: "hidden",
           }}
         >
-          {category.coverImage && (
-            <Image
-              src={category.coverImage}
-              alt={category.title}
-              fill
-              style={{ objectFit: "cover", opacity: 0.7 }}
-              unoptimized
-            />
-          )}
+          <Image
+            src={category.meta.coverImage}
+            alt={category.name}
+            fill
+            style={{ objectFit: "cover", opacity: 0.7 }}
+            unoptimized
+          />
           <div
             style={{
               position: "absolute",
@@ -83,7 +95,6 @@ export default function ServiceQuickView({ isOpen, onClose, category }: ServiceQ
             }}
           />
 
-          {/* Close button */}
           <button
             onClick={onClose}
             aria-label="Close"
@@ -108,7 +119,6 @@ export default function ServiceQuickView({ isOpen, onClose, category }: ServiceQ
             ✕
           </button>
 
-          {/* Category label */}
           <div style={{ position: "absolute", bottom: 18, left: 20 }}>
             <h2
               style={{
@@ -120,59 +130,32 @@ export default function ServiceQuickView({ isOpen, onClose, category }: ServiceQ
                 textShadow: "0 2px 8px rgba(0,0,0,0.4)",
               }}
             >
-              {category.title}
+              {category.name}
             </h2>
           </div>
         </div>
 
         {/* Description */}
-        <div style={{ padding: "18px 22px 12px", borderBottom: "1px solid #f0e4d4" }}>
-          <p style={{ fontSize: "0.88rem", color: "#6b4c3b", lineHeight: 1.6, margin: 0 }}>
-            {category.description}
-          </p>
-        </div>
+        {category.description && (
+          <div style={{ padding: "18px 22px 12px", borderBottom: "1px solid #f0e4d4" }}>
+            <p style={{ fontSize: "0.88rem", color: "#6b4c3b", lineHeight: 1.6, margin: 0 }}>
+              {category.description}
+            </p>
+          </div>
+        )}
 
-        {/* Service list — scrollable */}
+        {/* Service list */}
         <div style={{ flex: 1, overflowY: "auto", padding: "16px 22px" }}>
-          {category.subcategories ? (
-            Object.values(category.subcategories).map((sub) => (
-              <div key={sub.label} style={{ marginBottom: 24 }}>
-                <div
-                  style={{
-                    fontSize: "0.68rem",
-                    fontWeight: 700,
-                    letterSpacing: "2px",
-                    textTransform: "uppercase",
-                    color: "#a8865a",
-                    marginBottom: 10,
-                    padding: "4px 10px",
-                    background: "#f5ede0",
-                    borderRadius: 20,
-                    display: "inline-block",
-                  }}
-                >
-                  {sub.label}
-                </div>
-                {sub.services.map((svc) => (
-                  <ServiceRow
-                    key={svc.name}
-                    name={svc.name}
-                    price={svc.price}
-                    note={svc.note}
-                    bookHref={`/booking?service=${encodeURIComponent(`${category.title} › ${sub.label} › ${svc.name}`)}`}
-                    onClose={onClose}
-                  />
-                ))}
-              </div>
-            ))
+          {services.length === 0 ? (
+            <p style={{ color: "#9e7b68", fontSize: "0.88rem", textAlign: "center", marginTop: 24 }}>
+              No services found.
+            </p>
           ) : (
-            category.services?.map((svc) => (
+            services.map((svc) => (
               <ServiceRow
-                key={svc.name}
-                name={svc.name}
-                price={svc.price}
-                note={svc.note}
-                bookHref={`/booking?service=${encodeURIComponent(`${category.title} › ${svc.name}`)}`}
+                key={svc.id}
+                svc={svc}
+                categoryName={category.name}
                 onClose={onClose}
               />
             ))
@@ -180,13 +163,7 @@ export default function ServiceQuickView({ isOpen, onClose, category }: ServiceQ
         </div>
 
         {/* Footer CTA */}
-        <div
-          style={{
-            padding: "18px 22px",
-            borderTop: "1px solid #f0e4d4",
-            background: "#fff",
-          }}
-        >
+        <div style={{ padding: "18px 22px", borderTop: "1px solid #f0e4d4", background: "#fff" }}>
           <Link
             href={bookHref}
             onClick={onClose}
@@ -201,10 +178,9 @@ export default function ServiceQuickView({ isOpen, onClose, category }: ServiceQ
               fontSize: "0.92rem",
               letterSpacing: "0.4px",
               textDecoration: "none",
-              transition: "opacity 0.2s",
             }}
           >
-            Book {category.title}
+            Book {category.name}
           </Link>
         </div>
       </div>
@@ -212,20 +188,17 @@ export default function ServiceQuickView({ isOpen, onClose, category }: ServiceQ
   );
 }
 
-/* ── Individual service row inside the drawer ─────────────────── */
 function ServiceRow({
-  name,
-  price,
-  note,
-  bookHref,
+  svc,
+  categoryName,
   onClose,
 }: {
-  name: string;
-  price: string;
-  note?: string;
-  bookHref: string;
+  svc: ApiService;
+  categoryName: string;
   onClose: () => void;
 }) {
+  const bookHref = `/booking?service=${encodeURIComponent(`${categoryName} › ${svc.name}`)}`;
+
   return (
     <div
       style={{
@@ -237,10 +210,10 @@ function ServiceRow({
       }}
     >
       <div style={{ flex: 1, minWidth: 0 }}>
-        <div style={{ fontSize: "0.88rem", fontWeight: 600, color: "#2c1810" }}>{name}</div>
-        {note && (
-          <div style={{ fontSize: "0.72rem", color: "#9e7b68", marginTop: 2, fontStyle: "italic" }}>
-            {note}
+        <div style={{ fontSize: "0.88rem", fontWeight: 600, color: "#2c1810" }}>{svc.name}</div>
+        {svc.hasVariants && svc.variants.length > 0 && (
+          <div style={{ fontSize: "0.72rem", color: "#9e7b68", marginTop: 2 }}>
+            {svc.variants.map((v) => `${v.name}: GH₵ ${v.price}`).join(" · ")}
           </div>
         )}
       </div>
@@ -248,12 +221,12 @@ function ServiceRow({
         style={{
           fontFamily: "var(--font-playfair, serif)",
           fontWeight: 700,
-          fontSize: "0.95rem",
+          fontSize: "0.9rem",
           color: "#a8865a",
           whiteSpace: "nowrap",
         }}
       >
-        {price}
+        {formatPrice(svc)}
       </div>
       <Link
         href={bookHref}

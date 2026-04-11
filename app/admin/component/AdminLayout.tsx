@@ -1,9 +1,10 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
+import { getToken, clearToken } from '@/lib/api/admin';
 
 /* ── Nav items ─────────────────────────────────────────────── */
 const navItems = [
@@ -22,8 +23,19 @@ interface AdminLayoutProps {
 /* ── Component ─────────────────────────────────────────────── */
 export default function AdminLayout({ children }: AdminLayoutProps) {
   const pathname          = usePathname();
+  const router            = useRouter();
   const [collapsed, setCollapsed] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+
+  // Auth guard
+  useEffect(() => {
+    if (!getToken()) router.replace('/admin/login');
+  }, [router]);
+
+  function handleLogout() {
+    clearToken();
+    router.replace('/admin/login');
+  }
 
   return (
     <div style={styles.shell}>
@@ -127,6 +139,9 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
                 weekday: 'short', day: 'numeric', month: 'long',
               })}
             </div>
+            <button onClick={handleLogout} style={styles.logoutBtn} title="Sign out">
+              Sign out
+            </button>
             <div style={styles.avatar} title="Admin">A</div>
           </div>
         </header>
@@ -305,6 +320,18 @@ const styles: Record<string, React.CSSProperties> = {
     fontSize: '0.78rem', color: 'var(--text-light, #9E7B68)',
     fontWeight: 600,
   },
+  logoutBtn: {
+    padding: '6px 14px',
+    borderRadius: 8,
+    border: '1.5px solid var(--cream-dark, #F0E4D4)',
+    background: 'transparent',
+    color: 'var(--text-light, #9E7B68)',
+    fontSize: '0.75rem',
+    fontWeight: 600,
+    cursor: 'pointer',
+    transition: 'all 0.2s',
+  },
+
   avatar: {
     width: 36, height: 36, borderRadius: '50%',
     background: 'linear-gradient(135deg, var(--gold-dark,#A8865A), var(--gold,#C9A870))',

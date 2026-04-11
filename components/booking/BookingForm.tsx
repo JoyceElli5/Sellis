@@ -2,7 +2,9 @@
 
 import { useState, useEffect, type ChangeEvent, type FormEvent } from 'react';
 import { useSearchParams } from 'next/navigation';
-import { servicesData } from '@/data/services';
+import { getCategories, getServices } from '@/lib/api/public';
+import { formatPrice } from '@/lib/api/types';
+import type { ApiCategory, ApiService } from '@/lib/api/types';
 import { buildWhatsAppUrl, buildBookingMessage } from '@/lib/whatsapp';
 
 type FieldKey = 'name' | 'phone' | 'service' | 'date' | 'time' | 'notes';
@@ -18,11 +20,28 @@ export default function BookingForm() {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [sent, setSent] = useState(false);
+  const [categories, setCategories] = useState<ApiCategory[]>([]);
+  const [servicesByCategory, setServicesByCategory] = useState<Record<string, ApiService[]>>({});
 
   useEffect(() => {
     const svc = searchParams.get('service');
     if (svc) setFields((f) => ({ ...f, service: svc }));
   }, [searchParams]);
+
+  useEffect(() => {
+    getCategories()
+      .then(async (cats) => {
+        setCategories(cats);
+        const res = await getServices({ size: 300 });
+        const grouped: Record<string, ApiService[]> = {};
+        for (const svc of res.content) {
+          if (!grouped[svc.categoryId]) grouped[svc.categoryId] = [];
+          grouped[svc.categoryId].push(svc);
+        }
+        setServicesByCategory(grouped);
+      })
+      .catch(() => {});
+  }, []);
 
   const today = new Date().toISOString().split('T')[0] ?? '';
 
@@ -130,26 +149,22 @@ export default function BookingForm() {
             <option value="" disabled>
               Select a service…
             </option>
-            {Object.values(servicesData).map((cat) => (
-              <optgroup key={cat.id} label={cat.title}>
-                {cat.subcategories
-                  ? Object.values(cat.subcategories).flatMap((sub) =>
-                      sub.services.map((svc) => (
-                        <option
-                          key={`${cat.id}-${sub.label}-${svc.name}`}
-                          value={`${cat.title} › ${sub.label} › ${svc.name}`}
-                        >
-                          {svc.name} ({sub.label}) — {svc.price}
-                        </option>
-                      ))
-                    )
-                  : cat.services?.map((svc) => (
-                      <option key={`${cat.id}-${svc.name}`} value={`${cat.title} › ${svc.name}`}>
-                        {svc.name} — {svc.price}
-                      </option>
-                    ))}
-              </optgroup>
-            ))}
+            {categories.map((cat) => {
+              const svcs = servicesByCategory[cat.id] ?? [];
+              if (svcs.length === 0) return null;
+              return (
+                <optgroup key={cat.id} label={cat.name}>
+                  {svcs.map((svc) => (
+                    <option
+                      key={svc.id}
+                      value={`${cat.name} › ${svc.name}`}
+                    >
+                      {svc.name} — {formatPrice(svc)}
+                    </option>
+                  ))}
+                </optgroup>
+              );
+            })}
           </select>
         </div>
 
