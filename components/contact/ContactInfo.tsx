@@ -1,3 +1,6 @@
+import HIcon from '@/components/ui/HIcon';
+import { MapPinIcon, Call02Icon, InstagramIcon, Time01Icon, WhatsappIcon } from '@hugeicons/core-free-icons';
+
 export default function ContactInfo() {
   return (
     <div className="flex flex-col gap-5">
@@ -13,7 +16,7 @@ export default function ContactInfo() {
 
       <div className="flex gap-4 rounded-spa-md border border-cream-dark bg-white p-5 shadow-spa-sm transition-all hover:border-gold-light hover:shadow-spa-md">
         <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-spa-sm bg-gradient-to-br from-gold-dark to-gold text-lg shadow-[0_4px_12px_rgba(168,134,90,0.25)]">
-          📍
+          <HIcon icon={MapPinIcon} size={18} strokeWidth={1.8} className="text-white" />
         </div>
         <div>
           <h4 className="mb-1 text-[0.86rem]">Our Location</h4>
@@ -27,7 +30,7 @@ export default function ContactInfo() {
 
       <div className="flex gap-4 rounded-spa-md border border-cream-dark bg-white p-5 shadow-spa-sm transition-all hover:border-gold-light hover:shadow-spa-md">
         <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-spa-sm bg-gradient-to-br from-gold-dark to-gold text-lg shadow-[0_4px_12px_rgba(168,134,90,0.25)]">
-          📞
+          <HIcon icon={Call02Icon} size={18} strokeWidth={1.8} className="text-white" />
         </div>
         <div>
           <h4 className="mb-1 text-[0.86rem]">Call / WhatsApp</h4>
@@ -42,7 +45,10 @@ export default function ContactInfo() {
               rel="noopener noreferrer"
               className="font-semibold text-gold-dark transition-colors hover:underline"
             >
-              💬 Chat on WhatsApp →
+              <span className="inline-flex items-center gap-1.5">
+                <HIcon icon={WhatsappIcon} size={16} strokeWidth={1.8} />
+                Chat on WhatsApp
+              </span>
             </a>
           </p>
         </div>
@@ -50,7 +56,7 @@ export default function ContactInfo() {
 
       <div className="flex gap-4 rounded-spa-md border border-cream-dark bg-white p-5 shadow-spa-sm transition-all hover:border-gold-light hover:shadow-spa-md">
         <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-spa-sm bg-gradient-to-br from-gold-dark to-gold text-lg shadow-[0_4px_12px_rgba(168,134,90,0.25)]">
-          📷
+          <HIcon icon={InstagramIcon} size={18} strokeWidth={1.8} className="text-white" />
         </div>
         <div>
           <h4 className="mb-1 text-[0.86rem]">Instagram</h4>
@@ -71,7 +77,7 @@ export default function ContactInfo() {
 
       <div className="flex gap-4 rounded-spa-md border border-cream-dark bg-white p-5 shadow-spa-sm transition-all hover:border-gold-light hover:shadow-spa-md">
         <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-spa-sm bg-gradient-to-br from-gold-dark to-gold text-lg shadow-[0_4px_12px_rgba(168,134,90,0.25)]">
-          🕐
+          <HIcon icon={Time01Icon} size={18} strokeWidth={1.8} className="text-white" />
         </div>
         <div>
           <h4 className="mb-1 text-[0.86rem]">Opening Hours</h4>

@@ -2,6 +2,8 @@
 
 import { useState, type ChangeEvent, type FormEvent } from 'react';
 import { buildWhatsAppUrl, buildContactMessage } from '@/lib/whatsapp';
+import HIcon from '@/components/ui/HIcon';
+import { CheckmarkCircle02Icon, WhatsappIcon } from '@hugeicons/core-free-icons';
 
 type FieldKey = 'name' | 'phone' | 'subject' | 'message';
 
@@ -36,7 +38,9 @@ export default function ContactForm() {
   if (sent) {
     return (
       <div className="rounded-spa-lg bg-white p-10 text-center shadow-spa-md max-md:px-5 max-md:py-7">
-        <div className="mb-3 text-[2.8rem]">✅</div>
+        <div className="mb-3 flex justify-center">
+          <HIcon icon={CheckmarkCircle02Icon} size={52} strokeWidth={1.6} className="text-gold-dark" />
+        </div>
         <h3 className="mb-2">Message Sent!</h3>
         <p className="mb-6 text-[0.9rem]">WhatsApp opened with your message. We&apos;ll reply as soon as possible.</p>
         <button
@@ -108,7 +112,10 @@ export default function ContactForm() {
           type="submit"
           className="w-full rounded-spa-sm border-0 bg-gradient-to-br from-gold-dark to-gold py-4 font-sans text-[0.88rem] font-bold uppercase tracking-wide text-white shadow-[0_4px_20px_rgba(168,134,90,0.32)] transition-all hover:-translate-y-0.5 hover:shadow-[0_8px_28px_rgba(168,134,90,0.5)]"
         >
-          💬 &nbsp;Send via WhatsApp
+          <span className="inline-flex items-center justify-center gap-2">
+            <HIcon icon={WhatsappIcon} size={18} strokeWidth={1.8} />
+            Send via WhatsApp
+          </span>
         </button>
       </form>
     </div>

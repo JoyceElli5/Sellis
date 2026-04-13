@@ -1,8 +1,7 @@
 import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
-import { Playfair_Display, Raleway } from 'next/font/google';
-import Navbar from '@/components/layout/Navbar';
-import Footer from '@/components/layout/Footer';
+import { Playfair_Display, DM_Sans } from 'next/font/google';
+import MinimalNav from '@/components/layout/MinimalNav';
 import './globals.css';
 
 const playfair = Playfair_Display({
@@ -11,10 +10,10 @@ const playfair = Playfair_Display({
   display: 'swap',
 });
 
-const raleway = Raleway({
+const dmSans = DM_Sans({
   subsets: ['latin'],
-  weight: ['300', '400', '500', '600', '700'],
-  variable: '--font-raleway',
+  weight: ['400', '500', '600', '700'],
+  variable: '--font-dm',
   display: 'swap',
 });
 
@@ -30,11 +29,10 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="en" className={`${playfair.variable} ${raleway.variable}`}>
+    <html lang="en" className={`${playfair.variable} ${dmSans.variable}`}>
       <body>
-        
+        <MinimalNav />
         {children}
-       
       </body>
     </html>
   );

@@ -1,13 +1,15 @@
 import Link from 'next/link';
 import Image from 'next/image';
+import HIcon from '@/components/ui/HIcon';
+import { Facebook01Icon, InstagramIcon, WhatsappIcon, MapPinIcon, Call02Icon, Time01Icon, HeartCheckIcon } from '@hugeicons/core-free-icons';
 
 const serviceLinks = [
-  { href: '/services#cat-hair', label: 'Hair Services' },
-  { href: '/services#cat-facials', label: 'Facials' },
-  { href: '/services#cat-spa', label: 'Spa & Massage' },
-  { href: '/services#cat-nails', label: 'Nails' },
-  { href: '/services#cat-waxing', label: 'Waxing' },
-  { href: '/services#cat-lashes', label: 'Lashes & Brows' },
+  { href: '/booking', label: 'Hair Services' },
+  { href: '/booking', label: 'Facials' },
+  { href: '/booking', label: 'Spa & Massage' },
+  { href: '/booking', label: 'Nails' },
+  { href: '/booking', label: 'Waxing' },
+  { href: '/booking', label: 'Lashes & Brows' },
 ] as const;
 
 export default function Footer() {
@@ -41,7 +43,7 @@ export default function Footer() {
               rel="noopener noreferrer"
               aria-label="Instagram"
             >
-              📷
+              <HIcon icon={InstagramIcon} size={18} strokeWidth={1.8} />
             </a>
             <a
               href="https://wa.me/233XXXXXXXXX"
@@ -50,7 +52,7 @@ export default function Footer() {
               rel="noopener noreferrer"
               aria-label="WhatsApp"
             >
-              💬
+              <HIcon icon={WhatsappIcon} size={18} strokeWidth={1.8} />
             </a>
             <a
               href="https://facebook.com/sellisbeautyspa"
@@ -59,7 +61,7 @@ export default function Footer() {
               rel="noopener noreferrer"
               aria-label="Facebook"
             >
-              📘
+              <HIcon icon={Facebook01Icon} size={18} strokeWidth={1.8} />
             </a>
           </div>
         </div>
@@ -69,8 +71,8 @@ export default function Footer() {
             Quick Links
           </h5>
           <nav className="flex flex-col gap-2.5">
-            {(['/', '/services', '/booking', '/contact'] as const).map((href, i) => {
-              const labels = ['Home', 'Services', 'Book Appointment', 'Contact Us'] as const;
+            {(['/', '/booking', '/contact'] as const).map((href, i) => {
+              const labels = ['Home', 'Book appointment', 'Contact'] as const;
               return (
                 <Link
                   key={href}
@@ -107,15 +109,15 @@ export default function Footer() {
           </h5>
           <ul className="flex list-none flex-col gap-3 text-[0.83rem] leading-relaxed text-white/50">
             <li className="flex items-start gap-2.5">
-              <span className="mt-0.5 shrink-0 text-gold">📍</span>
+              <span className="mt-0.5 shrink-0 text-gold"><HIcon icon={MapPinIcon} size={18} strokeWidth={1.8} /></span>
               <span>Accra, Ghana</span>
             </li>
             <li className="flex items-start gap-2.5">
-              <span className="mt-0.5 shrink-0 text-gold">📞</span>
+              <span className="mt-0.5 shrink-0 text-gold"><HIcon icon={Call02Icon} size={18} strokeWidth={1.8} /></span>
               <span>+233 XX XXX XXXX</span>
             </li>
             <li className="flex items-start gap-2.5">
-              <span className="mt-0.5 shrink-0 text-gold">📷</span>
+              <span className="mt-0.5 shrink-0 text-gold"><HIcon icon={InstagramIcon} size={18} strokeWidth={1.8} /></span>
               <a
                 href="https://instagram.com/sellisbeautyspa"
                 className="text-white/50 transition-colors hover:text-gold-light"
@@ -126,7 +128,7 @@ export default function Footer() {
               </a>
             </li>
             <li className="flex items-start gap-2.5">
-              <span className="mt-0.5 shrink-0 text-gold">🕐</span>
+              <span className="mt-0.5 shrink-0 text-gold"><HIcon icon={Time01Icon} size={18} strokeWidth={1.8} /></span>
               <span>
                 Mon–Sat: 8am – 8pm
                 <br />
@@ -141,7 +143,9 @@ export default function Footer() {
         <p className="text-[0.76rem] text-white/[0.38]">
           &copy; {new Date().getFullYear()} Sellis Beauty Spa. All rights reserved.
         </p>
-        <p className="text-[0.76rem] text-white/[0.38]">Crafted with 💛 for beauty lovers</p>
+        <p className="flex items-center gap-1.5 text-[0.76rem] text-white/[0.38]">
+          Crafted with <HIcon icon={HeartCheckIcon} size={14} strokeWidth={1.8} className="text-gold" /> for beauty lovers
+        </p>
       </div>
     </footer>
   );

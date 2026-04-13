@@ -3,24 +3,38 @@
 import { useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import type { ServiceCategoryData } from "@/data/services";
+import HIcon from "@/components/ui/HIcon";
+import { Cancel01Icon, InformationCircleIcon } from "@hugeicons/core-free-icons";
+import type { ServiceCategoryData, ServiceEntry } from "@/data/services";
+
+export type QuickViewSelection = {
+  category: Pick<ServiceCategoryData, "id" | "title" | "description" | "gradient" | "coverImage">;
+  service: ServiceEntry;
+  subcategory?: string;
+};
 
 interface ServiceQuickViewProps {
   isOpen: boolean;
   onClose: () => void;
-  category: ServiceCategoryData | null;
+  selection: QuickViewSelection | null;
 }
 
-export default function ServiceQuickView({ isOpen, onClose, category }: ServiceQuickViewProps) {
+export default function ServiceQuickView({ isOpen, onClose, selection }: ServiceQuickViewProps) {
   // Lock body scroll while open
   useEffect(() => {
     document.body.style.overflow = isOpen ? "hidden" : "";
-    return () => { document.body.style.overflow = ""; };
+    return () => {
+      document.body.style.overflow = "";
+    };
   }, [isOpen]);
 
-  if (!category) return null;
+  if (!selection) return null;
 
-  const bookHref = `/booking?service=${encodeURIComponent(category.title)}`;
+  const { category, service, subcategory } = selection;
+  const bookingValue = subcategory
+    ? `${category.title} › ${subcategory} › ${service.name}`
+    : `${category.title} › ${service.name}`;
+  const bookHref = `/booking?service=${encodeURIComponent(bookingValue)}`;
 
   return (
     <>
@@ -40,6 +54,7 @@ export default function ServiceQuickView({ isOpen, onClose, category }: ServiceQ
 
       {/* Drawer */}
       <div
+        data-open={isOpen ? "true" : "false"}
         style={{
           position: "fixed",
           top: 0,
@@ -53,23 +68,24 @@ export default function ServiceQuickView({ isOpen, onClose, category }: ServiceQ
           flexDirection: "column",
           boxShadow: "-8px 0 40px rgba(44,24,16,0.18)",
           transform: isOpen ? "translateX(0)" : "translateX(100%)",
-          transition: "transform 0.35s cubic-bezier(0.4,0,0.2,1)",
+          transition: "transform 0.42s cubic-bezier(0.22,1,0.36,1)",
+          willChange: "transform",
         }}
       >
-        {/* Category Hero */}
+        {/* Header / Hero */}
         <div
           style={{
             position: "relative",
-            height: 180,
+            height: 200,
             flexShrink: 0,
             background: category.gradient,
             overflow: "hidden",
           }}
         >
-          {category.coverImage && (
+          {(service.image || category.coverImage) && (
             <Image
-              src={category.coverImage}
-              alt={category.title}
+              src={service.image || category.coverImage || ""}
+              alt={service.name}
               fill
               style={{ objectFit: "cover", opacity: 0.7 }}
               unoptimized
@@ -105,78 +121,155 @@ export default function ServiceQuickView({ isOpen, onClose, category }: ServiceQ
               justifyContent: "center",
             }}
           >
-            ✕
+            <HIcon icon={Cancel01Icon} size={18} strokeWidth={1.8} />
           </button>
 
-          {/* Category label */}
-          <div style={{ position: "absolute", bottom: 18, left: 20 }}>
+          <div className="sqv-stagger" style={{ position: "absolute", bottom: 18, left: 20, right: 20 }}>
+            {subcategory && (
+              <div
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: 6,
+                  background: "rgba(255,255,255,0.18)",
+                  border: "1px solid rgba(255,255,255,0.25)",
+                  backdropFilter: "blur(8px)",
+                  borderRadius: 999,
+                  padding: "4px 10px",
+                  color: "#fff",
+                  fontSize: "0.7rem",
+                  fontWeight: 700,
+                  textTransform: "uppercase",
+                  letterSpacing: "0.5px",
+                  marginBottom: 10,
+                }}
+              >
+                {subcategory}
+              </div>
+            )}
             <h2
               style={{
                 color: "#fff",
                 fontFamily: "var(--font-playfair, serif)",
-                fontSize: "1.35rem",
+                fontSize: "1.45rem",
                 fontWeight: 700,
                 margin: 0,
-                textShadow: "0 2px 8px rgba(0,0,0,0.4)",
+                textShadow: "0 2px 10px rgba(0,0,0,0.45)",
+                lineHeight: 1.2,
               }}
             >
-              {category.title}
+              {service.name}
             </h2>
+            <div
+              style={{
+                marginTop: 6,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+                gap: 12,
+              }}
+            >
+              <div style={{ color: "rgba(255,255,255,0.78)", fontSize: "0.82rem", fontWeight: 600 }}>
+                {category.title}
+              </div>
+              <div
+                style={{
+                  fontFamily: "var(--font-playfair, serif)",
+                  fontWeight: 700,
+                  fontSize: "1.05rem",
+                  color: "#edd9b8",
+                  whiteSpace: "nowrap",
+                }}
+              >
+                {service.price}
+              </div>
+            </div>
           </div>
         </div>
 
-        {/* Description */}
-        <div style={{ padding: "18px 22px 12px", borderBottom: "1px solid #f0e4d4" }}>
-          <p style={{ fontSize: "0.88rem", color: "#6b4c3b", lineHeight: 1.6, margin: 0 }}>
-            {category.description}
-          </p>
-        </div>
+        {/* Body */}
+        <div style={{ flex: 1, overflowY: "auto", padding: "18px 22px" }}>
+          <div
+            className="sqv-stagger"
+            style={{
+              display: "flex",
+              alignItems: "flex-start",
+              gap: 10,
+              padding: "14px 14px",
+              borderRadius: 12,
+              background: "#faf5ef",
+              border: "1px solid #f0e4d4",
+              marginBottom: 14,
+            }}
+          >
+            <div style={{ marginTop: 1, color: "#a8865a" }}>
+              <HIcon icon={InformationCircleIcon} size={18} strokeWidth={1.8} />
+            </div>
+            <p style={{ fontSize: "0.86rem", color: "#6b4c3b", lineHeight: 1.6, margin: 0 }}>
+              {category.description}
+            </p>
+          </div>
 
-        {/* Service list — scrollable */}
-        <div style={{ flex: 1, overflowY: "auto", padding: "16px 22px" }}>
-          {category.subcategories ? (
-            Object.values(category.subcategories).map((sub) => (
-              <div key={sub.label} style={{ marginBottom: 24 }}>
+          {service.note && (
+            <div
+              className="sqv-stagger"
+              style={{
+                fontSize: "0.84rem",
+                color: "#6b4c3b",
+                lineHeight: 1.7,
+                borderLeft: "3px solid #c9a870",
+                paddingLeft: 12,
+                marginTop: 8,
+              }}
+            >
+              <span style={{ fontWeight: 700, color: "#2c1810" }}>Note:</span> {service.note}
+            </div>
+          )}
+
+          <div className="sqv-stagger" style={{ marginTop: 18 }}>
+            <div
+              style={{
+                fontSize: "0.72rem",
+                fontWeight: 800,
+                letterSpacing: "2px",
+                textTransform: "uppercase",
+                color: "#a8865a",
+                marginBottom: 10,
+              }}
+            >
+              Quick details
+            </div>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr", gap: 10 }}>
+              <div
+                style={{
+                  border: "1px solid #f0e4d4",
+                  borderRadius: 12,
+                  padding: "12px 14px",
+                  background: "#fff",
+                }}
+              >
+                <div style={{ fontSize: "0.75rem", color: "#9e7b68", fontWeight: 700 }}>Category</div>
+                <div style={{ marginTop: 2, fontSize: "0.92rem", color: "#2c1810", fontWeight: 700 }}>
+                  {category.title}
+                </div>
+              </div>
+              {subcategory && (
                 <div
                   style={{
-                    fontSize: "0.68rem",
-                    fontWeight: 700,
-                    letterSpacing: "2px",
-                    textTransform: "uppercase",
-                    color: "#a8865a",
-                    marginBottom: 10,
-                    padding: "4px 10px",
-                    background: "#f5ede0",
-                    borderRadius: 20,
-                    display: "inline-block",
+                    border: "1px solid #f0e4d4",
+                    borderRadius: 12,
+                    padding: "12px 14px",
+                    background: "#fff",
                   }}
                 >
-                  {sub.label}
+                  <div style={{ fontSize: "0.75rem", color: "#9e7b68", fontWeight: 700 }}>Subcategory</div>
+                  <div style={{ marginTop: 2, fontSize: "0.92rem", color: "#2c1810", fontWeight: 700 }}>
+                    {subcategory}
+                  </div>
                 </div>
-                {sub.services.map((svc) => (
-                  <ServiceRow
-                    key={svc.name}
-                    name={svc.name}
-                    price={svc.price}
-                    note={svc.note}
-                    bookHref={`/booking?service=${encodeURIComponent(`${category.title} › ${sub.label} › ${svc.name}`)}`}
-                    onClose={onClose}
-                  />
-                ))}
-              </div>
-            ))
-          ) : (
-            category.services?.map((svc) => (
-              <ServiceRow
-                key={svc.name}
-                name={svc.name}
-                price={svc.price}
-                note={svc.note}
-                bookHref={`/booking?service=${encodeURIComponent(`${category.title} › ${svc.name}`)}`}
-                onClose={onClose}
-              />
-            ))
-          )}
+              )}
+            </div>
+          </div>
         </div>
 
         {/* Footer CTA */}
@@ -204,76 +297,25 @@ export default function ServiceQuickView({ isOpen, onClose, category }: ServiceQ
               transition: "opacity 0.2s",
             }}
           >
-            Book {category.title}
+            Book this service
           </Link>
         </div>
       </div>
-    </>
-  );
-}
 
-/* ── Individual service row inside the drawer ─────────────────── */
-function ServiceRow({
-  name,
-  price,
-  note,
-  bookHref,
-  onClose,
-}: {
-  name: string;
-  price: string;
-  note?: string;
-  bookHref: string;
-  onClose: () => void;
-}) {
-  return (
-    <div
-      style={{
-        display: "flex",
-        alignItems: "center",
-        gap: 10,
-        padding: "11px 0",
-        borderBottom: "1px solid #f5ede0",
-      }}
-    >
-      <div style={{ flex: 1, minWidth: 0 }}>
-        <div style={{ fontSize: "0.88rem", fontWeight: 600, color: "#2c1810" }}>{name}</div>
-        {note && (
-          <div style={{ fontSize: "0.72rem", color: "#9e7b68", marginTop: 2, fontStyle: "italic" }}>
-            {note}
-          </div>
-        )}
-      </div>
-      <div
-        style={{
-          fontFamily: "var(--font-playfair, serif)",
-          fontWeight: 700,
-          fontSize: "0.95rem",
-          color: "#a8865a",
-          whiteSpace: "nowrap",
-        }}
-      >
-        {price}
-      </div>
-      <Link
-        href={bookHref}
-        onClick={onClose}
-        style={{
-          background: "linear-gradient(135deg, #a8865a, #c9a870)",
-          color: "#fff",
-          padding: "6px 14px",
-          borderRadius: 20,
-          fontSize: "0.68rem",
-          fontWeight: 700,
-          textDecoration: "none",
-          letterSpacing: "0.5px",
-          textTransform: "uppercase",
-          whiteSpace: "nowrap",
-          flexShrink: 0,
-        }}
-      >
-        Book
-      </Link>
-    </div>
+      <style>{`
+        [data-open="true"] .sqv-stagger {
+          animation: sqv-stagger-in 520ms cubic-bezier(0.22, 1, 0.36, 1) both;
+        }
+
+        @keyframes sqv-stagger-in {
+          from { transform: translateY(10px); opacity: 0; }
+          to { transform: translateY(0); opacity: 1; }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+          * { scroll-behavior: auto !important; }
+        }
+      `}</style>
+    </>
   );
 }

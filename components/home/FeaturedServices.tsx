@@ -5,15 +5,17 @@ import Link from "next/link";
 import Image from "next/image";
 import { servicesData } from "@/data/services";
 import type { ServiceCategoryData } from "@/data/services";
-import ServiceQuickView from "@/components/services/ServiceQuickView";
+import ServiceQuickView, { type QuickViewSelection } from "@/components/services/ServiceQuickView";
 import SectionHeader from "@/components/ui/SectionHeader";
 import FadeIn from "@/components/ui/FadeIn";
+import HIcon from "@/components/ui/HIcon";
+import { InformationCircleIcon } from "@hugeicons/core-free-icons";
 
 const categories = Object.values(servicesData);
 
 export default function FeaturedServices() {
   const [activeId, setActiveId] = useState<string>(categories[0].id);
-  const [quickViewCat, setQuickViewCat] = useState<ServiceCategoryData | null>(null);
+  const [quickView, setQuickView] = useState<QuickViewSelection | null>(null);
 
   const activeCategories = categories.filter((c) => c.id === activeId);
 
@@ -108,7 +110,23 @@ export default function FeaturedServices() {
                           )?.label
                         : undefined
                     }
-                    onQuickView={() => setQuickViewCat(cat)}
+                    onQuickView={() =>
+                      setQuickView({
+                        category: {
+                          id: cat.id,
+                          title: cat.title,
+                          description: cat.description,
+                          gradient: cat.gradient,
+                          coverImage: cat.coverImage,
+                        },
+                        service: svc,
+                        subcategory: cat.subcategories
+                          ? Object.values(cat.subcategories).find((sub) =>
+                              sub.services.some((s) => s.name === svc.name)
+                            )?.label
+                          : undefined,
+                      })
+                    }
                   />
                 ));
               })}
@@ -127,9 +145,9 @@ export default function FeaturedServices() {
       </section>
 
       <ServiceQuickView
-        isOpen={!!quickViewCat}
-        onClose={() => setQuickViewCat(null)}
-        category={quickViewCat}
+        isOpen={!!quickView}
+        onClose={() => setQuickView(null)}
+        selection={quickView}
       />
     </>
   );
@@ -297,7 +315,7 @@ function ServiceCard({
                 transition: "background 0.2s",
               }}
             >
-              ⓘ
+              <HIcon icon={InformationCircleIcon} size={18} strokeWidth={1.8} />
             </button>
           </div>
         </div>

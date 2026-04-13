@@ -1,5 +1,7 @@
 import Link from 'next/link';
 import FadeIn from '@/components/ui/FadeIn';
+import HIcon from '@/components/ui/HIcon';
+import { FlowerIcon, SparklesIcon } from '@hugeicons/core-free-icons';
 
 const stats = [
   { n: '6+', l: 'Service Categories' },
@@ -62,13 +64,15 @@ export default function Intro() {
           <FadeIn direction="right" className="relative max-[900px]:order-first">
             <div className="relative aspect-[4/5] overflow-hidden rounded-spa-lg bg-gradient-to-br from-gold-pale to-pink-blush">
               <div className="flex h-full flex-col items-center justify-center gap-3 text-gold-dark/50">
-                <span className="text-5xl">🌸</span>
+                <span className="text-5xl">
+                  <HIcon icon={FlowerIcon} size={52} strokeWidth={1.6} />
+                </span>
                 <span className="text-[0.75rem] font-semibold uppercase tracking-[2px]">Add your spa photo here</span>
               </div>
             </div>
             <div className="absolute -left-[18px] bottom-7 flex items-center gap-3 rounded-spa-md bg-white p-3.5 pl-4 shadow-spa-lg max-[900px]:left-0">
               <div className="flex h-[42px] w-[42px] shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-gold-dark to-gold text-xl">
-                ✨
+                <HIcon icon={SparklesIcon} size={20} strokeWidth={1.8} className="text-white" />
               </div>
               <div>
                 <strong className="block font-serif text-[0.82rem] text-text-primary">Premium Quality</strong>

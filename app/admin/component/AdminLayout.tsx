@@ -4,14 +4,16 @@ import { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
+import HIcon from '@/components/ui/HIcon';
+import { Home03Icon, Calendar01Icon, ServiceIcon, Megaphone01Icon, Settings01Icon, GlobeIcon } from '@hugeicons/core-free-icons';
 
 /* ── Nav items ─────────────────────────────────────────────── */
 const navItems = [
-  { href: '/admin',                icon: '🏠', label: 'Dashboard' },
-  { href: '/admin/bookings',       icon: '📅', label: 'Bookings' },
-  { href: '/admin/services',       icon: '✨', label: 'Services' },
-  { href: '/admin/announcement',   icon: '📢', label: 'Announcements' },
-  { href: '/admin/settings',       icon: '⚙️', label: 'Settings' },
+  { href: '/admin',              icon: Home03Icon,        label: 'Dashboard' },
+  { href: '/admin/bookings',     icon: Calendar01Icon,    label: 'Bookings' },
+  { href: '/admin/services',     icon: ServiceIcon,       label: 'Services' },
+  { href: '/admin/announcement', icon: Megaphone01Icon,   label: 'Announcements' },
+  { href: '/admin/settings',     icon: Settings01Icon,    label: 'Settings' },
 ];
 
 /* ── Types ─────────────────────────────────────────────────── */
@@ -64,7 +66,9 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
                   justifyContent: collapsed ? 'center' : 'flex-start',
                 }}
               >
-                <span style={styles.navIcon}>{item.icon}</span>
+                <span style={styles.navIcon}>
+                  <HIcon icon={item.icon} size={18} strokeWidth={1.8} />
+                </span>
                 {!collapsed && <span style={styles.navLabel}>{item.label}</span>}
                 {active && <span style={styles.activeDot} />}
               </Link>
@@ -90,7 +94,9 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
           }}
           title={collapsed ? 'Back to site' : undefined}
         >
-          <span>🌐</span>
+          <span>
+            <HIcon icon={GlobeIcon} size={18} strokeWidth={1.8} />
+          </span>
           {!collapsed && <span>View Site</span>}
         </Link>
       </aside>
@@ -160,14 +166,16 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
                     onClick={() => setMobileOpen(false)}
                     style={{ ...styles.navLink, ...(active ? styles.navLinkActive : {}) }}
                   >
-                    <span style={styles.navIcon}>{item.icon}</span>
+                    <span style={styles.navIcon}>
+                      <HIcon icon={item.icon} size={18} strokeWidth={1.8} />
+                    </span>
                     <span style={styles.navLabel}>{item.label}</span>
                   </Link>
                 );
               })}
             </nav>
             <Link href="/" style={styles.backLink} onClick={() => setMobileOpen(false)}>
-              <span>🌐</span><span>View Site</span>
+              <span><HIcon icon={GlobeIcon} size={18} strokeWidth={1.8} /></span><span>View Site</span>
             </Link>
           </aside>
         </div>
