@@ -49,16 +49,16 @@ export function buildBookingMessage({
   const formattedTime = `${hour12}:${String(m).padStart(2, '0')} ${ampm}`;
 
   const lines = [
-    '✨ *Sellis Beauty Spa — Booking Request* ✨',
+    '*Sellis Beauty Spa — Booking Request*',
     '',
-    `👤 *Name:* ${name}`,
-    `📞 *Phone:* ${phone}`,
-    `💆 *Service:* ${service}`,
-    `📅 *Date:* ${formattedDate}`,
-    `⏰ *Time:* ${formattedTime}`,
+    `*Name:* ${name}`,
+    `*Phone:* ${phone}`,
+    `*Service:* ${service}`,
+    `*Date:* ${formattedDate}`,
+    `*Time:* ${formattedTime}`,
   ];
 
-  if (notes) lines.push(`📝 *Notes:* ${notes}`);
+  if (notes) lines.push(`*Notes:* ${notes}`);
   lines.push('', '_Sent via Sellis Beauty Spa website_');
 
   return lines.join('\n');
@@ -67,13 +67,13 @@ export function buildBookingMessage({
 /** Builds a contact/enquiry message. */
 export function buildContactMessage({ name, phone, subject, message }: ContactMessageFields): string {
   const lines = [
-    '✨ *Message via Sellis Beauty Spa Website* ✨',
+    '*Message via Sellis Beauty Spa Website*',
     '',
-    `👤 *Name:* ${name}`,
-    `📞 *Phone:* ${phone}`,
+    `*Name:* ${name}`,
+    `*Phone:* ${phone}`,
   ];
-  if (subject) lines.push(`📌 *Subject:* ${subject}`);
-  lines.push(`💬 *Message:* ${message}`);
+  if (subject) lines.push(`*Subject:* ${subject}`);
+  lines.push(`*Message:* ${message}`);
   lines.push('', '_Sent via Sellis Beauty Spa website_');
   return lines.join('\n');
 }
