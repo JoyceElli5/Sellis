@@ -4,7 +4,7 @@
  * IMPORTANT: Replace WHATSAPP_NUMBER with the real Ghana number, e.g. '233201234567'
  */
 
-export const WHATSAPP_NUMBER = '233XXXXXXXXX';
+export const WHATSAPP_NUMBER = '233593247781';
 
 export type BookingMessageFields = {
   name: string;
