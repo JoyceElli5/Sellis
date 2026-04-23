@@ -1,21 +1,13 @@
 import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
-import { Playfair_Display, Raleway } from 'next/font/google';
-import Navbar from '@/components/layout/Navbar';
-import Footer from '@/components/layout/Footer';
+import localFont from 'next/font/local';
 import './globals.css';
 
-const playfair = Playfair_Display({
-  subsets: ['latin'],
-  variable: '--font-playfair',
+const googleSansFlex = localFont({
+  src: '../public/Google_Sans_Flex/GoogleSansFlex-VariableFont_GRAD,ROND,opsz,slnt,wdth,wght.ttf',
+  variable: '--font-google-sans-flex',
   display: 'swap',
-});
-
-const raleway = Raleway({
-  subsets: ['latin'],
-  weight: ['300', '400', '500', '600', '700'],
-  variable: '--font-raleway',
-  display: 'swap',
+  weight: '100 900',
 });
 
 export const metadata: Metadata = {
@@ -30,11 +22,9 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="en" className={`${playfair.variable} ${raleway.variable}`}>
+    <html lang="en" className={googleSansFlex.variable}>
       <body>
-        
         {children}
-       
       </body>
     </html>
   );

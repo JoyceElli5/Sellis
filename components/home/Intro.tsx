@@ -1,10 +1,13 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import FadeIn from '@/components/ui/FadeIn';
+import HIcon from '@/components/ui/HIcon';
+import { SparklesIcon, StarIcon } from '@hugeicons/core-free-icons';
 
 const stats = [
   { n: '6+', l: 'Service Categories' },
   { n: '50+', l: 'Treatments Available' },
-  { n: '5★', l: 'Client Satisfaction' },
+  { n: '5', l: 'Client Satisfaction', icon: StarIcon },
 ] as const;
 
 export default function Intro() {
@@ -49,8 +52,11 @@ export default function Intro() {
               {stats.map((s, i) => (
                 <FadeIn key={s.n} delay={0.2 + i * 0.1}>
                   <div className="text-center">
-                    <span className="block font-serif text-[2.2rem] font-bold leading-none text-gold-dark">{s.n}</span>
-                    <span className="mt-1.5 block text-[0.7rem] font-bold uppercase tracking-wide text-text-light">
+                    <span className="flex items-center justify-center gap-1.5 font-serif text-[2.2rem] font-extrabold leading-none text-brown-dark">
+                      {s.n}
+                      {'icon' in s ? <HIcon icon={s.icon} size={20} strokeWidth={1.8} /> : null}
+                    </span>
+                    <span className="mt-1.5 block text-[0.7rem] font-extrabold uppercase tracking-wide text-brown-mid">
                       {s.l}
                     </span>
                   </div>
@@ -60,15 +66,19 @@ export default function Intro() {
           </div>
 
           <FadeIn direction="right" className="relative max-[900px]:order-first">
-            <div className="relative aspect-[4/5] overflow-hidden rounded-spa-lg bg-gradient-to-br from-gold-pale to-pink-blush">
-              <div className="flex h-full flex-col items-center justify-center gap-3 text-gold-dark/50">
-                <span className="text-5xl">🌸</span>
-                <span className="text-[0.75rem] font-semibold uppercase tracking-[2px]">Add your spa photo here</span>
-              </div>
+            <div className="relative aspect-4/5 overflow-hidden rounded-spa-lg bg-linear-to-br from-gold-pale to-pink-blush">
+              <Image
+                src="/sellis6.jpeg"
+                alt="Relaxing spa treatment room"
+                fill
+                className="object-cover"
+                unoptimized
+              />
+              <div className="absolute inset-0 bg-linear-to-t from-brown-dark/40 via-transparent to-transparent" />
             </div>
             <div className="absolute -left-[18px] bottom-7 flex items-center gap-3 rounded-spa-md bg-white p-3.5 pl-4 shadow-spa-lg max-[900px]:left-0">
-              <div className="flex h-[42px] w-[42px] shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-gold-dark to-gold text-xl">
-                ✨
+              <div className="flex h-[42px] w-[42px] shrink-0 items-center justify-center rounded-full bg-linear-to-br from-gold-dark to-gold text-xl">
+                <HIcon icon={SparklesIcon} size={20} strokeWidth={1.8} className="text-white" />
               </div>
               <div>
                 <strong className="block font-serif text-[0.82rem] text-text-primary">Premium Quality</strong>

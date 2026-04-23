@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { getCategories, getServices } from "@/lib/api/public";
@@ -12,41 +12,69 @@ import ServiceQuickView from "@/components/services/ServiceQuickView";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import CtaSection from "@/components/home/CtaSection";
+import PageHero from '@/components/ui/PageHero';
+import HIcon from '@/components/ui/HIcon';
+import { ArrowRight01Icon } from '@hugeicons/core-free-icons';
 
 export default function ServicesPage() {
   const [categories, setCategories] = useState<ApiCategory[]>([]);
-  const [activeId, setActiveId] = useState<string>("");
+  const [activeSection, setActiveSection] = useState<string>("");
   const [services, setServices] = useState<ApiService[]>([]);
-  const [loadingCats, setLoadingCats] = useState(true);
-  const [loadingSvcs, setLoadingSvcs] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [quickView, setQuickView] = useState<{
     category: QuickViewCategory;
     services: ApiService[];
   } | null>(null);
 
   useEffect(() => {
-    getCategories()
-      .then((cats) => {
+    Promise.all([getCategories(), getServices({ size: 300 })])
+      .then(([cats, svcs]) => {
         setCategories(cats);
-        if (cats.length > 0) setActiveId(cats[0].id);
+        setServices(svcs.content);
+        if (cats.length > 0) setActiveSection(cats[0].id);
       })
-      .catch(() => {})
-      .finally(() => setLoadingCats(false));
+      .catch(() => {
+        setCategories([]);
+        setServices([]);
+      })
+      .finally(() => setLoading(false));
   }, []);
 
-  const loadServices = useCallback((categoryId: string) => {
-    setLoadingSvcs(true);
-    getServices({ category: categoryId, size: 100 })
-      .then((res) => setServices(res.content))
-      .catch(() => setServices([]))
-      .finally(() => setLoadingSvcs(false));
-  }, []);
+  const servicesByCategory = useMemo(() => {
+    const grouped: Record<string, ApiService[]> = {};
+    for (const svc of services) {
+      if (!grouped[svc.categoryId]) grouped[svc.categoryId] = [];
+      grouped[svc.categoryId].push(svc);
+    }
+    return grouped;
+  }, [services]);
 
   useEffect(() => {
-    if (activeId) loadServices(activeId);
-  }, [activeId, loadServices]);
+    if (categories.length === 0) return;
+    const onScroll = () => {
+      const y = window.scrollY + 180;
+      for (const cat of categories) {
+        const el = document.getElementById(`cat-${cat.id}`);
+        if (!el) continue;
+        const top = el.offsetTop;
+        const bottom = top + el.offsetHeight;
+        if (y >= top && y < bottom) {
+          setActiveSection(cat.id);
+          return;
+        }
+      }
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, [categories]);
 
-  const activeCategory = categories.find((c) => c.id === activeId);
+  function jumpToCategory(id: string) {
+    const target = document.getElementById(`cat-${id}`);
+    if (!target) return;
+    const top = target.getBoundingClientRect().top + window.scrollY - 130;
+    window.scrollTo({ top, behavior: "smooth" });
+    setActiveSection(id);
+  }
 
   function openQuickView(cat: ApiCategory, svcs: ApiService[]) {
     setQuickView({
@@ -63,100 +91,27 @@ export default function ServicesPage() {
   return (
     <main>
       <Navbar />
+      <PageHero
+        label="Sellis Beauty Spa"
+        title="Our Services & Pricing"
+        subtitle="A complete treatment catalog with clear pricing, descriptions, and booking actions."
+        imageUrl="/sellis1.jpeg"
+      />
 
-      {/* ── Page hero ─────────────────────────────────────────── */}
-      <div
-        style={{
-          paddingTop: "calc(var(--nav-height) + 56px)",
-          paddingBottom: 56,
-          textAlign: "center",
-          background: "linear-gradient(180deg, #faf5ef 0%, #f0e4d4 100%)",
-          borderBottom: "1px solid #e8d9c4",
-        }}
-      >
-        <span
-          style={{
-            fontSize: "0.68rem",
-            fontWeight: 700,
-            letterSpacing: "3px",
-            textTransform: "uppercase",
-            color: "#a8865a",
-            display: "block",
-            marginBottom: 10,
-          }}
-        >
-          Sellis Beauty Spa
-        </span>
-        <h1
-          style={{
-            fontFamily: "var(--font-playfair, serif)",
-            fontSize: "clamp(2rem, 5vw, 3rem)",
-            fontWeight: 700,
-            color: "#2c1810",
-            margin: "0 0 14px",
-          }}
-        >
-          Our Services &amp; Pricing
-        </h1>
-        <p
-          style={{
-            fontSize: "1rem",
-            color: "#6b4c3b",
-            maxWidth: 520,
-            margin: "0 auto",
-            lineHeight: 1.65,
-          }}
-        >
-          Browse our full menu of luxury beauty treatments. Every price includes expert care and premium products.
-        </p>
-      </div>
-
-      {/* ── Sticky category tabs ───────────────────────────────── */}
-      {!loadingCats && (
-        <div
-          style={{
-            position: "sticky",
-            top: "var(--nav-height)",
-            zIndex: 100,
-            background: "#fff",
-            borderBottom: "1px solid #f0e4d4",
-            boxShadow: "0 2px 8px rgba(44,24,16,0.06)",
-          }}
-        >
-          <div
-            style={{
-              maxWidth: 1200,
-              margin: "0 auto",
-              padding: "14px 24px",
-              display: "flex",
-              gap: 8,
-              overflowX: "auto",
-              scrollbarWidth: "none",
-              justifyContent: "center",
-              flexWrap: "wrap",
-            }}
-          >
+      {!loading && (
+        <div className="sticky top-(--nav-height) z-100 border-b border-cream-dark bg-white/95 px-4 py-3 backdrop-blur-md lg:hidden">
+          <div className="mx-auto flex max-w-[1280px] gap-2 overflow-x-auto">
             {categories.map((cat) => {
-              const active = activeId === cat.id;
+              const active = activeSection === cat.id;
               return (
                 <button
                   key={cat.id}
-                  onClick={() => setActiveId(cat.id)}
-                  style={{
-                    flexShrink: 0,
-                    padding: "8px 20px",
-                    borderRadius: 50,
-                    border: active ? "none" : "1.5px solid #f0e4d4",
-                    background: active ? "linear-gradient(135deg, #a8865a, #c9a870)" : "transparent",
-                    color: active ? "#fff" : "#6b4c3b",
-                    fontWeight: 700,
-                    fontSize: "0.76rem",
-                    letterSpacing: "0.8px",
-                    textTransform: "uppercase",
-                    cursor: "pointer",
-                    transition: "all 0.25s ease",
-                    boxShadow: active ? "0 4px 14px rgba(168,134,90,0.35)" : "none",
-                  }}
+                  onClick={() => jumpToCategory(cat.id)}
+                  className={`chip-toggle shrink-0 ${
+                    active
+                      ? "border-transparent bg-brown-dark text-white shadow-[0_8px_18px_rgba(44,24,16,0.28)]"
+                      : "border-cream-dark bg-transparent text-text-secondary hover:border-gold-light hover:bg-gold-pale/35"
+                  }`}
                 >
                   {cat.name}
                 </button>
@@ -166,84 +121,78 @@ export default function ServicesPage() {
         </div>
       )}
 
-      {/* ── Service cards ──────────────────────────────────────── */}
-      <section style={{ padding: "52px 24px 72px", maxWidth: 1280, margin: "0 auto" }}>
-        {/* Category heading */}
-        {activeCategory && (
-          <div style={{ display: "flex", alignItems: "center", gap: 16, marginBottom: 36 }}>
-            <div
-              style={{
-                width: 52,
-                height: 52,
-                borderRadius: 12,
-                background: getMeta(activeCategory.slug).gradient,
-                flexShrink: 0,
-              }}
-            />
-            <div>
-              <span
-                style={{
-                  fontSize: "0.66rem",
-                  fontWeight: 700,
-                  letterSpacing: "3px",
-                  textTransform: "uppercase",
-                  color: "#a8865a",
-                  display: "block",
-                  marginBottom: 2,
-                }}
-              >
-                Our Services
-              </span>
-              <h2
-                style={{
-                  fontFamily: "var(--font-playfair, serif)",
-                  fontSize: "1.6rem",
-                  fontWeight: 700,
-                  color: "#2c1810",
-                  margin: 0,
-                }}
-              >
-                {activeCategory.name}
-              </h2>
-              {activeCategory.description && (
-                <p style={{ fontSize: "0.85rem", color: "#6b4c3b", marginTop: 4 }}>
-                  {activeCategory.description}
-                </p>
-              )}
+      <section className="bg-off-white pb-[72px] pt-12">
+        <div className="mx-auto grid max-w-[1280px] grid-cols-1 gap-10 px-6 lg:grid-cols-[260px_1fr]">
+          <aside className="sticky top-[calc(var(--nav-height)+24px)] hidden h-fit rounded-spa-lg border border-cream-dark bg-white p-5 shadow-spa-sm lg:block">
+            <p className="mb-4 text-[0.68rem] font-extrabold uppercase tracking-[2px] text-text-light">
+              Categories
+            </p>
+            <div className="space-y-1.5">
+              {categories.map((cat) => {
+                const active = activeSection === cat.id;
+                const count = servicesByCategory[cat.id]?.length ?? 0;
+                return (
+                  <button
+                    key={cat.id}
+                    onClick={() => jumpToCategory(cat.id)}
+                    className={`flex w-full items-center justify-between rounded-spa-sm px-3 py-2.5 text-left text-[0.82rem] font-bold transition-colors ${
+                      active ? "bg-brown-dark text-white" : "text-text-secondary hover:bg-cream"
+                    }`}
+                  >
+                    <span>{cat.name}</span>
+                    <span className={`text-[0.7rem] ${active ? "text-white/75" : "text-text-light"}`}>{count}</span>
+                  </button>
+                );
+              })}
             </div>
-          </div>
-        )}
+          </aside>
 
-        {loadingSvcs ? (
-          <div style={{ display: "flex", gap: 20 }}>
-            {[1, 2, 3, 4].map((i) => (
-              <div
-                key={i}
-                style={{
-                  width: 260,
-                  height: 360,
-                  borderRadius: 20,
-                  background: "#f0e4d4",
-                  flexShrink: 0,
-                  animation: "pulse 1.5s ease-in-out infinite",
-                }}
-              />
-            ))}
+          <div>
+            {loading ? (
+              <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                {[1, 2, 3, 4].map((i) => (
+                  <div key={i} className="h-44 rounded-spa-lg bg-cream-dark soft-pulse" />
+                ))}
+              </div>
+            ) : (
+              <div className="space-y-10">
+                {categories.map((cat) => {
+                  const catServices = servicesByCategory[cat.id] ?? [];
+                  return (
+                    <section key={cat.id} id={`cat-${cat.id}`} className="scroll-mt-32">
+                      <div className="mb-5 flex items-end justify-between gap-4 border-b border-cream-dark pb-3">
+                        <div>
+                          <span className="mb-1 block text-[0.68rem] font-extrabold uppercase tracking-[2px] text-gold-dark">
+                            Our Services
+                          </span>
+                          <h2 className="text-[1.7rem] font-extrabold text-brown-dark">{cat.name}</h2>
+                          {cat.description && <p className="mt-1 max-w-[680px] text-[0.88rem]">{cat.description}</p>}
+                        </div>
+                        <button
+                          onClick={() => openQuickView(cat, catServices)}
+                          className="hidden items-center gap-1.5 rounded-full border border-cream-dark bg-white px-4 py-2 text-[0.72rem] font-extrabold uppercase tracking-[1px] text-text-secondary transition-colors hover:border-gold hover:text-gold-dark md:inline-flex"
+                        >
+                          quick view
+                          <HIcon icon={ArrowRight01Icon} size={14} strokeWidth={1.8} />
+                        </button>
+                      </div>
+
+                      {catServices.length === 0 ? (
+                        <p className="text-[0.88rem] text-text-light">No treatments available in this category yet.</p>
+                      ) : (
+                        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                          {catServices.map((svc) => (
+                            <ServiceCatalogCard key={svc.id} svc={svc} category={cat} onQuickView={() => openQuickView(cat, catServices)} />
+                          ))}
+                        </div>
+                      )}
+                    </section>
+                  );
+                })}
+              </div>
+            )}
           </div>
-        ) : (
-          <div style={{ overflowX: "auto", scrollbarWidth: "none", paddingBottom: 12 }}>
-            <div style={{ display: "flex", gap: 20, minWidth: "max-content" }}>
-              {services.map((svc) => (
-                <PageServiceCard
-                  key={svc.id}
-                  svc={svc}
-                  category={activeCategory!}
-                  onQuickView={() => openQuickView(activeCategory!, services)}
-                />
-              ))}
-            </div>
-          </div>
-        )}
+        </div>
       </section>
 
       <CtaSection
@@ -262,8 +211,7 @@ export default function ServicesPage() {
   );
 }
 
-/* ── Service card ─────────────────────────────────────────────── */
-function PageServiceCard({
+function ServiceCatalogCard({
   svc,
   category,
   onQuickView,
@@ -277,106 +225,47 @@ function PageServiceCard({
   const bookHref = `/booking?service=${encodeURIComponent(`${category?.name ?? ""} › ${svc.name}`)}`;
 
   return (
-    <div
-      className="group"
-      style={{ position: "relative", width: 260, height: 360, borderRadius: 20, overflow: "hidden", flexShrink: 0 }}
-    >
-      <div
-        style={{ position: "absolute", inset: 0, background: meta.gradient, transition: "transform 0.5s ease" }}
-        className="group-hover:scale-105"
-      >
-        <Image src={bg} alt={svc.name} fill style={{ objectFit: "cover", opacity: 0.65 }} unoptimized />
-      </div>
-
-      <div
-        style={{
-          position: "absolute",
-          inset: 0,
-          background: "linear-gradient(to top, rgba(0,0,0,0.78) 0%, rgba(0,0,0,0.1) 55%, transparent 100%)",
-        }}
-      />
-
-      <div
-        style={{
-          position: "relative",
-          zIndex: 2,
-          height: "100%",
-          display: "flex",
-          flexDirection: "column",
-          padding: "18px 20px 22px",
-        }}
-      >
-        <div style={{ marginTop: "auto" }}>
-          <h3
-            style={{
-              fontFamily: "var(--font-playfair, serif)",
-              fontSize: "1.1rem",
-              fontWeight: 700,
-              color: "#fff",
-              marginBottom: 4,
-              lineHeight: 1.3,
-              textShadow: "0 2px 8px rgba(0,0,0,0.4)",
-            }}
-          >
-            {svc.name}
-          </h3>
-          <p
-            style={{
-              fontFamily: "var(--font-playfair, serif)",
-              fontWeight: 700,
-              fontSize: "1rem",
-              color: "#edd9b8",
-              marginBottom: 18,
-            }}
-          >
-            {formatPrice(svc)}
-          </p>
-
-          <div
-            className="translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100"
-            style={{ display: "flex", gap: 8, transition: "all 0.3s ease" }}
-          >
-            <Link
-              href={bookHref}
-              style={{
-                flex: 1,
-                textAlign: "center",
-                background: "linear-gradient(135deg, #a8865a, #c9a870)",
-                color: "#fff",
-                padding: "10px 0",
-                borderRadius: 50,
-                fontSize: "0.78rem",
-                fontWeight: 700,
-                letterSpacing: "0.4px",
-                textDecoration: "none",
-              }}
-            >
-              Book Now
-            </Link>
-            <button
-              onClick={onQuickView}
-              aria-label="View all services"
-              style={{
-                width: 40,
-                height: 40,
-                borderRadius: "50%",
-                background: "rgba(255,255,255,0.2)",
-                backdropFilter: "blur(6px)",
-                border: "1px solid rgba(255,255,255,0.3)",
-                color: "#fff",
-                cursor: "pointer",
-                fontSize: "1rem",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                flexShrink: 0,
-              }}
-            >
-              ⓘ
-            </button>
-          </div>
+    <article className="surface-card group overflow-hidden">
+      <div className="relative h-44 overflow-hidden border-b border-cream-dark" style={{ background: meta.gradient }}>
+        <Image
+          src={bg}
+          alt={svc.name}
+          fill
+          style={{ objectFit: "cover", opacity: 0.86 }}
+          className="scale-100 transition-transform duration-700 ease-smooth group-hover:scale-[1.05]"
+          unoptimized
+        />
+        <div className="absolute inset-0 bg-linear-to-t from-black/55 via-transparent to-transparent" />
+        <div className="absolute bottom-3 right-3 rounded-full bg-white/90 px-3 py-1 text-[0.66rem] font-extrabold uppercase tracking-[1px] text-brown-dark">
+          {formatPrice(svc)}
         </div>
       </div>
-    </div>
+      <div className="space-y-3 p-4">
+        <h3 className="text-[1rem] font-extrabold text-brown-dark">{svc.name}</h3>
+        <p className="text-[0.84rem] leading-relaxed text-text-secondary">
+          {svc.description ?? "A focused ritual for glow, relief, and deep relaxation."}
+        </p>
+        {svc.hasVariants && svc.variants.length > 0 && (
+          <p className="text-[0.76rem] font-semibold text-text-light">
+            {svc.variants.map((v) => `${v.name}: GH₵ ${v.price}`).join(" · ")}
+          </p>
+        )}
+        <div className="flex items-center justify-between gap-2 pt-1">
+          <button
+            onClick={onQuickView}
+            className="inline-flex items-center gap-1.5 text-[0.72rem] font-extrabold uppercase tracking-[0.8px] text-gold-dark transition-colors hover:text-brown-dark"
+          >
+            Quick view
+            <HIcon icon={ArrowRight01Icon} size={16} strokeWidth={1.8} />
+          </button>
+          <Link
+            href={bookHref}
+            className="rounded-full bg-linear-to-br from-gold-dark to-gold px-4 py-2 text-[0.72rem] font-extrabold uppercase tracking-[0.8px] text-white transition-transform duration-200 hover:scale-[1.02]"
+          >
+            Book now
+          </Link>
+        </div>
+      </div>
+    </article>
   );
 }
