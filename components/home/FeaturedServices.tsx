@@ -11,6 +11,8 @@ import type { QuickViewCategory } from "@/components/services/ServiceQuickView";
 import ServiceQuickView from "@/components/services/ServiceQuickView";
 import SectionHeader from "@/components/ui/SectionHeader";
 import FadeIn from "@/components/ui/FadeIn";
+import HIcon from '@/components/ui/HIcon';
+import { ArrowRight01Icon } from '@hugeicons/core-free-icons';
 
 export default function FeaturedServices() {
   const [categories, setCategories] = useState<ApiCategory[]>([]);
@@ -71,28 +73,18 @@ export default function FeaturedServices() {
           {/* ── Category tabs ───────────────────────────────── */}
           {!loadingCats && (
             <FadeIn>
-              <div style={{ display: "flex", gap: 8, overflowX: "auto", paddingBottom: 4, marginBottom: 36, scrollbarWidth: "none" }}>
+              <div style={{ display: "flex", gap: 8, overflowX: "auto", paddingBottom: 4, marginBottom: 30, scrollbarWidth: "none" }}>
                 {categories.map((cat) => {
                   const active = activeId === cat.id;
                   return (
                     <button
                       key={cat.id}
                       onClick={() => setActiveId(cat.id)}
-                      style={{
-                        flexShrink: 0,
-                        padding: "9px 20px",
-                        borderRadius: 50,
-                        border: active ? "none" : "1.5px solid #f0e4d4",
-                        background: active ? "linear-gradient(135deg, #a8865a, #c9a870)" : "transparent",
-                        color: active ? "#fff" : "#6b4c3b",
-                        fontWeight: 700,
-                        fontSize: "0.78rem",
-                        letterSpacing: "0.8px",
-                        textTransform: "uppercase",
-                        cursor: "pointer",
-                        transition: "all 0.25s ease",
-                        boxShadow: active ? "0 4px 14px rgba(168,134,90,0.35)" : "none",
-                      }}
+                      className={`chip-toggle shrink-0 px-5 py-[9px] ${
+                        active
+                          ? "border-transparent bg-brown-dark text-white shadow-[0_8px_18px_rgba(44,24,16,0.28)]"
+                          : "border-cream-dark bg-transparent text-text-secondary hover:border-gold-light hover:bg-gold-pale/35"
+                      }`}
                     >
                       {cat.name}
                     </button>
@@ -108,6 +100,7 @@ export default function FeaturedServices() {
               {[1, 2, 3].map((i) => (
                 <div
                   key={i}
+                  className="soft-pulse"
                   style={{
                     width: 260,
                     height: 360,
@@ -120,8 +113,8 @@ export default function FeaturedServices() {
               ))}
             </div>
           ) : (
-            <div style={{ overflowX: "auto", scrollbarWidth: "none", paddingBottom: 8 }}>
-              <div style={{ display: "flex", gap: 20, minWidth: "max-content" }}>
+            <div className="card-rail">
+              <div className="card-rail-track">
                 {services.map((svc) => (
                   <ServiceCard
                     key={svc.id}
@@ -135,7 +128,7 @@ export default function FeaturedServices() {
           )}
 
           <FadeIn>
-            <div style={{ marginTop: 40, textAlign: "center" }}>
+            <div className="motion-fade-up" style={{ marginTop: 40, textAlign: "center" }}>
               <Link href="/services" className="btn btn-primary">
                 View Full Service Menu
               </Link>
@@ -170,12 +163,11 @@ function ServiceCard({
 
   return (
     <div
-      className="group"
-      style={{ position: "relative", width: 260, height: 360, borderRadius: 20, overflow: "hidden", flexShrink: 0 }}
+      className="group motion-fade-up surface-card relative h-[360px] w-[260px] shrink-0 overflow-hidden rounded-spa-lg border-0"
     >
       <div
-        style={{ position: "absolute", inset: 0, background: meta.gradient, transition: "transform 0.5s ease" }}
-        className="group-hover:scale-105"
+        style={{ position: "absolute", inset: 0, background: meta.gradient }}
+        className="scale-100 will-change-transform transition-transform duration-700 ease-smooth group-hover:scale-[1.08]"
       >
         <Image src={bg} alt={svc.name} fill style={{ objectFit: "cover", opacity: 0.65 }} unoptimized />
       </div>
@@ -184,29 +176,31 @@ function ServiceCard({
 
       <div style={{ position: "relative", zIndex: 2, height: "100%", display: "flex", flexDirection: "column", padding: "18px 20px 22px" }}>
         <div style={{ marginTop: "auto" }}>
-          <h3 style={{ fontFamily: "var(--font-playfair, serif)", fontSize: "1.1rem", fontWeight: 700, color: "#fff", marginBottom: 4, lineHeight: 1.3, textShadow: "0 2px 8px rgba(0,0,0,0.4)" }}>
+          <h3 style={{ fontFamily: "var(--font-serif)", fontSize: "1.1rem", fontWeight: 700, color: "#fff", marginBottom: 4, lineHeight: 1.3, textShadow: "0 2px 8px rgba(0,0,0,0.4)" }}>
             {svc.name}
           </h3>
-          <p style={{ fontFamily: "var(--font-playfair, serif)", fontWeight: 700, fontSize: "1rem", color: "#edd9b8", marginBottom: 18 }}>
+          <p className="mb-2 line-clamp-2 text-[0.74rem] leading-relaxed text-white/80">
+            {svc.description ?? 'Your skin and body reset, tailored by our specialists.'}
+          </p>
+          <p style={{ fontFamily: "var(--font-serif)", fontWeight: 700, fontSize: "1rem", color: "#edd9b8", marginBottom: 18 }}>
             {formatPrice(svc)}
           </p>
 
           <div
-            className="translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100"
-            style={{ display: "flex", gap: 8, transition: "all 0.3s ease" }}
+            className="flex translate-y-4 gap-2 opacity-0 transition-all duration-300 ease-out group-hover:translate-y-0 group-hover:opacity-100"
           >
             <Link
               href={bookHref}
-              style={{ flex: 1, textAlign: "center", background: "linear-gradient(135deg, #a8865a, #c9a870)", color: "#fff", padding: "10px 0", borderRadius: 50, fontSize: "0.78rem", fontWeight: 700, letterSpacing: "0.4px", textDecoration: "none" }}
+              className="flex-1 rounded-full bg-linear-to-br from-gold-dark to-gold py-[10px] text-center text-[0.78rem] font-bold tracking-[0.4px] text-white transition-transform duration-200 ease-out hover:scale-[1.02] active:scale-[0.98]"
             >
               Book Now
             </Link>
             <button
               onClick={onQuickView}
-              aria-label="View all services"
-              style={{ width: 40, height: 40, borderRadius: "50%", background: "rgba(255,255,255,0.2)", backdropFilter: "blur(6px)", border: "1px solid rgba(255,255,255,0.3)", color: "#fff", cursor: "pointer", fontSize: "1rem", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}
+              aria-label="Open quick view"
+              className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-white/30 bg-white/20 text-white backdrop-blur-[6px] transition-all duration-200 hover:scale-105 hover:bg-white/30 active:scale-95"
             >
-              ⓘ
+              <HIcon icon={ArrowRight01Icon} size={18} strokeWidth={1.8} />
             </button>
           </div>
         </div>

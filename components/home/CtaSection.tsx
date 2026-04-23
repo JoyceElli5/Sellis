@@ -7,15 +7,15 @@ type CtaSectionProps = {
 };
 
 export default function CtaSection({
-  heading = 'Book Your Luxury Experience Today',
-  subtext = 'Treat yourself to the self-care you deserve. Your appointment is just a click away.',
+  heading = 'Your body called. We answered.',
+  subtext = 'Book your treatment in under 60 seconds. We confirm quickly on WhatsApp and prepare everything before you arrive.',
 }: CtaSectionProps) {
   return (
-    <section className="section bg-gradient-to-br from-gold-pale to-pink-blush text-center">
+    <section className="section bg-linear-to-br from-[#f9f4ec] to-[#f4ece1] text-center">
       <div className="container">
         <FadeIn>
           <span className="mb-2.5 inline-block text-[0.7rem] font-bold uppercase tracking-[3.5px] text-gold-dark">
-            Ready to Glow?
+            Ready When You Are
           </span>
         </FadeIn>
         <FadeIn delay={0.1}>

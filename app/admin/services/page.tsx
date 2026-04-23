@@ -11,6 +11,8 @@ import {
 } from "@/lib/api/admin";
 import { formatPrice } from "@/lib/api/types";
 import type { ApiCategory, ApiService, ServicePayload } from "@/lib/api/types";
+import HIcon from '@/components/ui/HIcon';
+import { Delete02Icon } from '@hugeicons/core-free-icons';
 
 const emptyPayload: ServicePayload = {
   name: "",
@@ -355,7 +357,9 @@ export default function AdminServicesPage() {
       {deleteId && (
         <div style={overlayStyle} onClick={() => setDeleteId(null)}>
           <div style={{ ...modalStyle, maxWidth: 380, textAlign: "center" }} onClick={(e) => e.stopPropagation()}>
-            <div style={{ fontSize: "2rem", marginBottom: 12 }}>🗑️</div>
+            <div style={{ marginBottom: 12, display: 'flex', justifyContent: 'center' }}>
+              <HIcon icon={Delete02Icon} size={36} strokeWidth={1.8} className="text-red-600" />
+            </div>
             <h2 style={{ fontFamily: "var(--font-playfair, serif)", fontSize: "1.1rem", fontWeight: 700, color: "#2c1810", margin: "0 0 10px" }}>
               Delete Service?
             </h2>

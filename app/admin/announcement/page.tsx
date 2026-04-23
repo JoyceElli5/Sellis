@@ -287,7 +287,7 @@ function SaveButton({ onClick, saved }: { onClick: () => void; saved: boolean })
         letterSpacing: "0.3px",
       }}
     >
-      {saved ? "✓ Saved!" : "Save Changes"}
+      {saved ? "Saved!" : "Save Changes"}
     </button>
   );
 }

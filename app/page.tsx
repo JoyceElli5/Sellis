@@ -3,7 +3,6 @@ import Hero from '@/components/home/Hero';
 import Intro from '@/components/home/Intro';
 import FeaturedServices from '@/components/home/FeaturedServices';
 import WhyUs from '@/components/home/WhyUs';
-import Testimonials from '@/components/home/Testimonials';
 import CtaSection from '@/components/home/CtaSection';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
@@ -22,12 +21,11 @@ export default function HomePage() {
       <Navbar />
 
       <Hero />
-      {/* <Intro /> */}
+      <Intro />
       <FeaturedServices />
-      {/* <WhyUs /> */}
-      {/* <Testimonials /> */}
+      <WhyUs />
       <CtaSection />
-       <Footer />
+      <Footer />
     </main>
   );
 }
