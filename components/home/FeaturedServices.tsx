@@ -187,7 +187,7 @@ function ServiceCard({
           </p>
 
           <div
-            className="flex translate-y-4 gap-2 opacity-0 transition-all duration-300 ease-out group-hover:translate-y-0 group-hover:opacity-100"
+            className="flex gap-2 transition-all duration-300 ease-out max-md:translate-y-0 max-md:opacity-100 md:translate-y-4 md:opacity-0 md:group-hover:translate-y-0 md:group-hover:opacity-100"
           >
             <Link
               href={bookHref}

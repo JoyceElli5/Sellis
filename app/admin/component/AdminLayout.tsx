@@ -6,7 +6,6 @@ import Image from 'next/image';
 import { usePathname, useRouter } from 'next/navigation';
 import { getToken, clearToken } from '@/lib/api/admin';
 import HIcon from '@/components/ui/HIcon';
-import type { IconSvgObject } from '@hugeicons/core-free-icons';
 import { Calendar01Icon, Globe02Icon, Home01Icon, Megaphone01Icon, Menu01Icon, Settings01Icon, SparklesIcon } from '@hugeicons/core-free-icons';
 
 /* ── Nav items ─────────────────────────────────────────────── */
@@ -21,11 +20,6 @@ const navItems = [
 /* ── Types ─────────────────────────────────────────────────── */
 interface AdminLayoutProps {
   children: React.ReactNode;
-}
-interface NavItem {
-  href: string;
-  icon: IconSvgObject;
-  label: string;
 }
 
 /* ── Component ─────────────────────────────────────────────── */
@@ -70,7 +64,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
 
         {/* Nav links */}
         <nav style={styles.nav}>
-          {(navItems as NavItem[]).map((item) => {
+          {navItems.map((item) => {
             const active = pathname === item.href ||
               (item.href !== '/admin' && pathname.startsWith(item.href));
             return (
@@ -173,7 +167,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
               </div>
             </div>
             <nav style={styles.nav}>
-              {(navItems as NavItem[]).map((item) => {
+              {navItems.map((item) => {
                 const active = pathname === item.href ||
                   (item.href !== '/admin' && pathname.startsWith(item.href));
                 return (

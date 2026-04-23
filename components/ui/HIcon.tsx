@@ -1,10 +1,9 @@
 'use client';
 
 import { HugeiconsIcon } from '@hugeicons/react';
-import type { IconSvgObject } from '@hugeicons/core-free-icons';
 
 type HIconProps = {
-  icon: IconSvgObject;
+  icon: React.ComponentProps<typeof HugeiconsIcon>['icon'];
   size?: number;
   strokeWidth?: number;
   className?: string;
