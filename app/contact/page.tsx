@@ -5,7 +5,24 @@ import ContactForm from '@/components/contact/ContactForm';
 
 export const metadata: Metadata = {
   title: 'Contact Us',
-  description: 'Get in touch with Sellis Beauty Spa — WhatsApp, Instagram, or send us a message.',
+  description:
+    'Get in touch with Sellis Beauty Spa in Accra, Ghana — WhatsApp, Instagram, or send us a message.',
+  alternates: {
+    canonical: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://sellisbeautyspa.com'}/contact`,
+  },
+  openGraph: {
+    title: 'Contact Us | Sellis Beauty Spa',
+    description:
+      'Get in touch with Sellis Beauty Spa in Accra, Ghana — WhatsApp, Instagram, or send us a message.',
+    images: [{ url: '/logo.png', width: 800, height: 800, alt: 'Sellis Beauty Spa' }],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Contact Us | Sellis Beauty Spa',
+    description:
+      'Get in touch with Sellis Beauty Spa in Accra, Ghana — WhatsApp, Instagram, or send us a message.',
+    images: ['/logo.png'],
+  },
 };
 
 export default function ContactPage() {

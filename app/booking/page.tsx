@@ -6,7 +6,24 @@ import BookingSidebar from '@/components/booking/BookingSidebar';
 
 export const metadata: Metadata = {
   title: 'Book an Appointment',
-  description: 'Book your beauty treatment at Sellis Beauty Spa. Quick booking — confirmed via WhatsApp.',
+  description:
+    'Book your beauty treatment at Sellis Beauty Spa in Accra, Ghana. Quick and easy — confirmed via WhatsApp.',
+  alternates: {
+    canonical: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://sellisbeautyspa.com'}/booking`,
+  },
+  openGraph: {
+    title: 'Book an Appointment | Sellis Beauty Spa',
+    description:
+      'Book your beauty treatment at Sellis Beauty Spa in Accra, Ghana. Quick and easy — confirmed via WhatsApp.',
+    images: [{ url: '/logo.png', width: 800, height: 800, alt: 'Sellis Beauty Spa' }],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Book an Appointment | Sellis Beauty Spa',
+    description:
+      'Book your beauty treatment at Sellis Beauty Spa in Accra, Ghana. Quick and easy — confirmed via WhatsApp.',
+    images: ['/logo.png'],
+  },
 };
 
 export default function BookingPage() {
