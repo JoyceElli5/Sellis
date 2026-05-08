@@ -1,5 +1,7 @@
 import FadeIn from '@/components/ui/FadeIn';
 import SectionHeader from '@/components/ui/SectionHeader';
+import HIcon from '@/components/ui/HIcon';
+import { StarIcon } from '@hugeicons/core-free-icons';
 
 const reviews = [
   {
@@ -38,7 +40,11 @@ export default function Testimonials() {
                   </div>
                   <div>
                     <span className="block text-[0.875rem] font-bold text-text-primary">{r.name}</span>
-                    <div className="mt-0.5 text-[0.72rem] text-gold">★★★★★</div>
+                    <div className="mt-0.5 flex items-center gap-0.5 text-gold">
+                      {Array.from({ length: 5 }).map((_, idx) => (
+                        <HIcon key={`${r.name}-${idx}`} icon={StarIcon} size={12} strokeWidth={1.8} />
+                      ))}
+                    </div>
                   </div>
                 </div>
               </div>

@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import Script from 'next/script';
 import Hero from '@/components/home/Hero';
 import FeaturedServices from '@/components/home/FeaturedServices';
+import WhyUs from '@/components/home/WhyUs';
 import CtaSection from '@/components/home/CtaSection';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
@@ -68,7 +69,9 @@ export default function HomePage() {
       <AnnouncementModal />
       <Navbar />
       <Hero />
+      <Intro />
       <FeaturedServices />
+      <WhyUs />
       <CtaSection />
       <Footer />
     </main>

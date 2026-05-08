@@ -2,6 +2,8 @@
 
 import { useState, type ChangeEvent, type FormEvent } from 'react';
 import { buildWhatsAppUrl, buildContactMessage } from '@/lib/whatsapp';
+import HIcon from '@/components/ui/HIcon';
+import { CheckmarkCircle02Icon, WhatsappIcon } from '@hugeicons/core-free-icons';
 
 type FieldKey = 'name' | 'phone' | 'subject' | 'message';
 
@@ -31,12 +33,14 @@ export default function ContactForm() {
   };
 
   const inputClass =
-    'w-full rounded-spa-sm border-[1.5px] border-cream-dark bg-off-white px-4 py-3 text-[0.9rem] text-text-primary outline-none transition-all duration-300 focus:border-gold focus:bg-white focus:shadow-[0_0_0_3px_rgba(201,168,112,0.12)]';
+    'input-luxury w-full rounded-spa-sm border-[1.5px] border-cream-dark bg-off-white px-4 py-3 text-[0.9rem] text-text-primary outline-none focus:border-gold focus:bg-white focus:shadow-[0_0_0_3px_rgba(201,168,112,0.12)]';
 
   if (sent) {
     return (
-      <div className="rounded-spa-lg bg-white p-10 text-center shadow-spa-md max-md:px-5 max-md:py-7">
-        <div className="mb-3 text-[2.8rem]">✅</div>
+      <div className="surface-card rounded-spa-lg p-10 text-center shadow-spa-md max-md:px-5 max-md:py-7">
+        <div className="mb-3 flex justify-center">
+          <HIcon icon={CheckmarkCircle02Icon} size={48} strokeWidth={1.8} className="text-gold-dark" />
+        </div>
         <h3 className="mb-2">Message Sent!</h3>
         <p className="mb-6 text-[0.9rem]">WhatsApp opened with your message. We&apos;ll reply as soon as possible.</p>
         <button
@@ -54,7 +58,7 @@ export default function ContactForm() {
   }
 
   return (
-    <div className="rounded-spa-lg bg-white p-10 shadow-spa-md max-md:px-5 max-md:py-7">
+    <div className="motion-fade-up surface-card rounded-spa-lg p-10 shadow-spa-md max-md:px-5 max-md:py-7">
       <h3 className="mb-2 text-2xl">Send Us a Message</h3>
       <p className="mb-7 text-[0.875rem]">Have a question? We&apos;ll get back to you promptly.</p>
 
@@ -75,7 +79,7 @@ export default function ContactForm() {
           <label htmlFor="c-phone" className="mb-2 block text-[0.73rem] font-bold uppercase tracking-wide text-text-secondary">
             Phone / WhatsApp <span className="text-gold-dark">*</span>
           </label>
-          <input id="c-phone" type="tel" value={fields.phone} onChange={set('phone')} placeholder="+233 XX XXX XXXX" className={inputClass} />
+          <input id="c-phone" type="tel" value={fields.phone} onChange={set('phone')} placeholder="+233593247781" className={inputClass} />
         </div>
         <div className="mb-5">
           <label htmlFor="c-subject" className="mb-2 block text-[0.73rem] font-bold uppercase tracking-wide text-text-secondary">
@@ -106,9 +110,12 @@ export default function ContactForm() {
 
         <button
           type="submit"
-          className="w-full rounded-spa-sm border-0 bg-gradient-to-br from-gold-dark to-gold py-4 font-sans text-[0.88rem] font-bold uppercase tracking-wide text-white shadow-[0_4px_20px_rgba(168,134,90,0.32)] transition-all hover:-translate-y-0.5 hover:shadow-[0_8px_28px_rgba(168,134,90,0.5)]"
+          className="w-full rounded-spa-sm border-0 bg-linear-to-br from-gold-dark to-gold py-4 font-sans text-[0.88rem] font-bold uppercase tracking-wide text-white shadow-[0_4px_20px_rgba(168,134,90,0.32)] transition-all hover:-translate-y-0.5 hover:scale-[1.01] hover:shadow-[0_8px_28px_rgba(168,134,90,0.5)] active:scale-[0.98]"
         >
-          💬 &nbsp;Send via WhatsApp
+          <span className="inline-flex items-center justify-center gap-2">
+            <HIcon icon={WhatsappIcon} size={18} strokeWidth={1.8} />
+            Send via WhatsApp
+          </span>
         </button>
       </form>
     </div>

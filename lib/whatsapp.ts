@@ -1,7 +1,7 @@
 /**
  * Sellis Beauty Spa — WhatsApp Utilities
  *
- * IMPORTANT: Replace WHATSAPP_NUMBER with the real Ghana number, e.g. '233201234567'
+ * WhatsApp number should be in international format without '+'.
  */
 
 export const WHATSAPP_NUMBER = '233593247781';
@@ -49,7 +49,7 @@ export function buildBookingMessage({
   const formattedTime = `${hour12}:${String(m).padStart(2, '0')} ${ampm}`;
 
   const lines = [
-    '*Sellis Beauty Spa — Booking Request*',
+    '*Sellis Beauty Spa - Booking Request*',
     '',
     `*Name:* ${name}`,
     `*Phone:* ${phone}`,

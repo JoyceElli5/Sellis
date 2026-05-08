@@ -2,6 +2,8 @@
 
 import { useState, useEffect } from "react";
 import Image from "next/image";
+import HIcon from '@/components/ui/HIcon';
+import { Cancel01Icon } from '@hugeicons/core-free-icons';
 
 export interface ModalConfig {
   enabled: boolean;
@@ -101,7 +103,7 @@ export default function AnnouncementModal() {
               fontWeight: 700,
             }}
           >
-            ✕
+            <HIcon icon={Cancel01Icon} size={16} strokeWidth={1.8} />
           </button>
 
           {/* Image */}
