@@ -19,4 +19,4 @@ logging:
   level:
     com.sellis.server: DEBUG
     org.springframework.data.mongodb: INFO
-    org.springframework.security: INFO
+    org.springframework.security: INFO 
