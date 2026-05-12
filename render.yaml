@@ -1,0 +1,18 @@
+services:
+  - type: web_service
+    name: sellis-server
+    env: java
+    plan: starter
+    branch: main
+    workingDirectory: server
+    buildCommand: ./mvnw -B -DskipTests package
+    startCommand: java -jar target/server-1.0.0.jar
+    envVars:
+      - key: MONGO_URI
+        value: mongodb://localhost:27017/sellis
+      - key: JWT_SECRET
+        value: replace-with-a-secure-secret
+      - key: ADMIN_EMAIL
+        value: admin@sellis.com
+      - key: ADMIN_PASSWORD
+        value: Admin@123
