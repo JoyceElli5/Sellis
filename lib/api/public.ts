@@ -1,10 +1,11 @@
 import apiClient from './client';
 import type { ApiCategory, ApiService, ApiResponse, PagedResponse } from './types';
+import { normalizeService, normalizeCategory } from './normalize';
 
 /** GET /api/categories — all active categories ordered by displayOrder */
 export async function getCategories(): Promise<ApiCategory[]> {
   const { data } = await apiClient.get<ApiResponse<ApiCategory[]>>('/api/categories');
-  return data.data;
+  return data.data.map(normalizeCategory);
 }
 
 /** GET /api/services — paginated, optionally filtered by categoryId or search term */
@@ -18,11 +19,11 @@ export async function getServices(params?: {
     '/api/services',
     { params }
   );
-  return data.data;
+  return { ...data.data, content: data.data.content.map(normalizeService) };
 }
 
 /** GET /api/services/:id */
 export async function getService(id: string): Promise<ApiService> {
   const { data } = await apiClient.get<ApiResponse<ApiService>>(`/api/services/${id}`);
-  return data.data;
+  return normalizeService(data.data);
 }
