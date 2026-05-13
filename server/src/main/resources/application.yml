@@ -1,5 +1,5 @@
 server:
-  port: 8080
+  port: ${PORT:8080}
 
 spring:
   data:
@@ -19,4 +19,4 @@ logging:
   level:
     com.sellis.server: DEBUG
     org.springframework.data.mongodb: INFO
-    org.springframework.security: INFO
+    org.springframework.security: INFO 
