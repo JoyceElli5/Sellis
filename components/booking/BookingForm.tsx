@@ -2,8 +2,12 @@
 
 import { useState, useEffect, type ChangeEvent, type FormEvent } from 'react';
 import { useSearchParams } from 'next/navigation';
-import { servicesData } from '@/data/services';
+import { getCategories, getServices } from '@/lib/api/public';
+import { formatPrice } from '@/lib/api/types';
+import type { ApiCategory, ApiService } from '@/lib/api/types';
 import { buildWhatsAppUrl, buildBookingMessage } from '@/lib/whatsapp';
+import HIcon from '@/components/ui/HIcon';
+import { CheckmarkCircle02Icon, WhatsappIcon } from '@hugeicons/core-free-icons';
 
 type FieldKey = 'name' | 'phone' | 'service' | 'date' | 'time' | 'notes';
 
@@ -18,11 +22,28 @@ export default function BookingForm() {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [sent, setSent] = useState(false);
+  const [categories, setCategories] = useState<ApiCategory[]>([]);
+  const [servicesByCategory, setServicesByCategory] = useState<Record<string, ApiService[]>>({});
 
   useEffect(() => {
     const svc = searchParams.get('service');
     if (svc) setFields((f) => ({ ...f, service: svc }));
   }, [searchParams]);
+
+  useEffect(() => {
+    getCategories()
+      .then(async (cats) => {
+        setCategories(cats);
+        const res = await getServices({ size: 300 });
+        const grouped: Record<string, ApiService[]> = {};
+        for (const svc of res.content) {
+          if (!grouped[svc.categoryId]) grouped[svc.categoryId] = [];
+          grouped[svc.categoryId].push(svc);
+        }
+        setServicesByCategory(grouped);
+      })
+      .catch(() => {});
+  }, []);
 
   const today = new Date().toISOString().split('T')[0] ?? '';
 
@@ -50,12 +71,14 @@ export default function BookingForm() {
   };
 
   const fieldClass =
-    'w-full appearance-none rounded-spa-sm border-[1.5px] border-cream-dark bg-off-white px-4 py-3 text-[0.9rem] text-text-primary outline-none transition-all duration-300 focus:border-gold focus:bg-white focus:shadow-[0_0_0_3px_rgba(201,168,112,0.12)]';
+    'input-luxury w-full appearance-none rounded-spa-sm border-[1.5px] border-cream-dark bg-off-white px-4 py-3 text-[0.9rem] text-text-primary outline-none focus:border-gold focus:bg-white focus:shadow-[0_0_0_3px_rgba(201,168,112,0.12)]';
 
   if (sent) {
     return (
-      <div className="rounded-spa-lg bg-white p-12 text-center shadow-spa-md max-md:px-5 max-md:py-7">
-        <div className="mb-4 text-5xl">✅</div>
+      <div className="motion-fade-up rounded-spa-lg bg-white p-12 text-center shadow-spa-md max-md:px-5 max-md:py-7">
+        <div className="mb-4 flex justify-center">
+          <HIcon icon={CheckmarkCircle02Icon} size={56} strokeWidth={1.6} className="text-gold-dark" />
+        </div>
         <h3 className="mb-2.5">Booking Sent!</h3>
         <p className="mb-7 text-[0.9rem]">WhatsApp opened with your booking details. We&apos;ll confirm your appointment shortly.</p>
         <button
@@ -73,13 +96,13 @@ export default function BookingForm() {
   }
 
   return (
-    <div className="rounded-spa-lg bg-white p-12 shadow-spa-md max-md:px-5 max-md:py-7">
-      <h2 className="mb-2">Reserve Your Spot</h2>
-      <p className="mb-8 text-[0.9rem]">
+    <div className="motion-fade-up surface-card rounded-spa-lg p-12 shadow-spa-md max-md:px-5 max-md:py-7">
+      <h2 className="motion-fade-up mb-2">Reserve Your Spot</h2>
+      <p className="motion-fade-up motion-delay-1 mb-8 text-[0.9rem]">
         All fields marked <span className="text-gold-dark">*</span> are required.
       </p>
 
-      <form onSubmit={handleSubmit} noValidate>
+      <form onSubmit={handleSubmit} noValidate className="motion-fade-up motion-delay-2">
         {error && (
           <div className="mb-4 rounded-spa-sm border border-red-300 bg-red-50 px-4 py-3 text-center text-[0.85rem] text-red-800">
             {error}
@@ -110,7 +133,7 @@ export default function BookingForm() {
               type="tel"
               value={fields.phone}
               onChange={set('phone')}
-              placeholder="+233 XX XXX XXXX"
+              placeholder="+233593247781"
               autoComplete="tel"
               className={fieldClass}
             />
@@ -130,26 +153,22 @@ export default function BookingForm() {
             <option value="" disabled>
               Select a service…
             </option>
-            {Object.values(servicesData).map((cat) => (
-              <optgroup key={cat.id} label={cat.title}>
-                {cat.subcategories
-                  ? Object.values(cat.subcategories).flatMap((sub) =>
-                      sub.services.map((svc) => (
-                        <option
-                          key={`${cat.id}-${sub.label}-${svc.name}`}
-                          value={`${cat.title} › ${sub.label} › ${svc.name}`}
-                        >
-                          {svc.name} ({sub.label}) — {svc.price}
-                        </option>
-                      ))
-                    )
-                  : cat.services?.map((svc) => (
-                      <option key={`${cat.id}-${svc.name}`} value={`${cat.title} › ${svc.name}`}>
-                        {svc.name} — {svc.price}
-                      </option>
-                    ))}
-              </optgroup>
-            ))}
+            {categories.map((cat) => {
+              const svcs = servicesByCategory[cat.id] ?? [];
+              if (svcs.length === 0) return null;
+              return (
+                <optgroup key={cat.id} label={cat.name}>
+                  {svcs.map((svc) => (
+                    <option
+                      key={svc.id}
+                      value={`${cat.name} › ${svc.name}`}
+                    >
+                      {svc.name} — {formatPrice(svc)}
+                    </option>
+                  ))}
+                </optgroup>
+              );
+            })}
           </select>
         </div>
 
@@ -193,9 +212,16 @@ export default function BookingForm() {
         <button
           type="submit"
           disabled={loading}
-          className="mt-2.5 w-full cursor-pointer rounded-spa-sm border-0 bg-gradient-to-br from-gold-dark to-gold py-4 font-sans text-[0.88rem] font-bold uppercase tracking-wide text-white shadow-[0_4px_20px_rgba(168,134,90,0.32)] transition-all hover:-translate-y-0.5 hover:shadow-[0_8px_28px_rgba(168,134,90,0.5)] disabled:cursor-not-allowed disabled:opacity-75"
+          className="mt-2.5 w-full cursor-pointer rounded-spa-sm border-0 bg-linear-to-br from-gold-dark to-gold py-4 font-sans text-[0.88rem] font-bold uppercase tracking-wide text-white shadow-[0_4px_20px_rgba(168,134,90,0.32)] transition-all hover:-translate-y-0.5 hover:scale-[1.01] hover:shadow-[0_8px_28px_rgba(168,134,90,0.5)] active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-75"
         >
-          {loading ? 'Opening WhatsApp…' : '📲  Send Booking via WhatsApp'}
+          {loading ? (
+            'Opening WhatsApp…'
+          ) : (
+            <span className="inline-flex items-center justify-center gap-2">
+              <HIcon icon={WhatsappIcon} size={18} strokeWidth={1.8} />
+              Send Booking via WhatsApp
+            </span>
+          )}
         </button>
       </form>
     </div>

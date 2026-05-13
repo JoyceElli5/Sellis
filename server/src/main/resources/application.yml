@@ -3,8 +3,8 @@ server:
 
 spring:
   data:
-    mongodb:
-      uri: ${MONGO_URI:mongodb://localhost:27017/sellis}
+    mongodb: 
+      uri: ${MONGO_URI:mongodb+srv://ellijoyce7_db_user:hfen7DrD0ZQSNWyh@cluster0.s0fbtry.mongodb.net/}
       auto-index-creation: true
 
 app:

@@ -3,19 +3,39 @@ import { Suspense } from 'react';
 import PageHero from '@/components/ui/PageHero';
 import BookingForm from '@/components/booking/BookingForm';
 import BookingSidebar from '@/components/booking/BookingSidebar';
+import Navbar from '@/components/layout/Navbar';
 
 export const metadata: Metadata = {
   title: 'Book an Appointment',
-  description: 'Book your beauty treatment at Sellis Beauty Spa. Quick booking — confirmed via WhatsApp.',
+  description:
+    'Book your beauty treatment at Sellis Beauty Spa in Accra, Ghana. Quick and easy — confirmed via WhatsApp.',
+  alternates: {
+    canonical: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://sellisbeautyspa.com'}/booking`,
+  },
+  openGraph: {
+    title: 'Book an Appointment | Sellis Beauty Spa',
+    description:
+      'Book your beauty treatment at Sellis Beauty Spa in Accra, Ghana. Quick and easy — confirmed via WhatsApp.',
+    images: [{ url: '/logo.png', width: 800, height: 800, alt: 'Sellis Beauty Spa' }],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Book an Appointment | Sellis Beauty Spa',
+    description:
+      'Book your beauty treatment at Sellis Beauty Spa in Accra, Ghana. Quick and easy — confirmed via WhatsApp.',
+    images: ['/logo.png'],
+  },
 };
 
 export default function BookingPage() {
   return (
     <main>
+      <Navbar />
       <PageHero
         label="Sellis Beauty Spa"
         title="Book Your Appointment"
         subtitle="Fill in the form below and we'll confirm your booking on WhatsApp. It only takes a minute."
+        imageUrl="/sellis2.jpeg"
       />
       <section className="bg-off-white py-20">
         <div className="container">
@@ -27,9 +47,13 @@ export default function BookingPage() {
                 </div>
               }
             >
-              <BookingForm />
+              <div className="motion-fade-up">
+                <BookingForm />
+              </div>
             </Suspense>
-            <BookingSidebar />
+            <div className="motion-fade-up motion-delay-1">
+              <BookingSidebar />
+            </div>
           </div>
         </div>
       </section>

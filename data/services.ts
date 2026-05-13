@@ -58,12 +58,12 @@ export const servicesData: Record<string, ServiceCategoryData> = {
         name: 'Washing',
         price: 'GH₵ 60 – 80',
         note: 'Depending on product used',
-        image: 'https://images.unsplash.com/photo-1527799820374-87642af6f6de?w=600&auto=format&fit=crop&q=80',
+        image: 'https://media.istockphoto.com/id/2266903636/photo/beautiful-african-american-woman-receiving-luxurious-hair-wash-at-salon-spa.jpg?s=1024x1024&w=is&k=20&c=2O6IHJPSsEo2KZCqWDgIyer1-YSee59-xacU8zwpOOI=',
       },
       {
         name: 'Cornrow with Own Hair',
         price: 'GH₵ 50',
-        image: 'https://images.unsplash.com/photo-1585747860715-2ba37e788b70?w=600&auto=format&fit=crop&q=80',
+        image: 'https://media.istockphoto.com/id/2166823175/photo/detailed-of-daughters-hair-by-her-mother.jpg?s=1024x1024&w=is&k=20&c=LFcCOdqo7yrAa5DvXCIsPk4FCKBQJeWG9E_hoexA_-E=',
       },
       {
         name: 'Cornrow with Extension',
@@ -94,12 +94,12 @@ export const servicesData: Record<string, ServiceCategoryData> = {
         name: 'Braiding with Extension',
         price: 'GH₵ 300 – 450',
         note: 'Depending on style',
-        image: 'https://images.unsplash.com/photo-1611781184651-a12e7b8ce15a?w=600&auto=format&fit=crop&q=80',
+        image: 'https://media.istockphoto.com/id/2160005563/photo/home-hair-braiding-session-with-mixed-race-and-black-women.jpg?s=1024x1024&w=is&k=20&c=3bQ4hgGVTACQyivXl5YMOEjLK-7Q8qQrbuqfjAxaXQ4=',
       },
       {
         name: 'Braiding without Extension',
         price: 'GH₵ 250',
-        image: 'https://images.unsplash.com/photo-1576650517849-1eb5f79ad61f?w=600&auto=format&fit=crop&q=80',
+        image: 'https://plus.unsplash.com/premium_photo-1664875849368-596b1c113976?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8aGFpciUyMGJyYWlkc3xlbnwwfHwwfHx8MA%3D%3D',
       },
     ],
   },
@@ -114,7 +114,7 @@ export const servicesData: Record<string, ServiceCategoryData> = {
       {
         name: 'Deep Cleansing Facial',
         price: 'GH₵ 350',
-        image: 'https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?w=600&auto=format&fit=crop&q=80',
+        image: 'https://i.pinimg.com/736x/8f/2f/33/8f2f33bb26e8ea62d66be185ec4d1c80.jpg',
       },
       {
         name: 'Derma-Planing',

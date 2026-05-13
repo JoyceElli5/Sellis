@@ -1,21 +1,62 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { servicesData } from "@/data/services";
-import type { ServiceCategoryData } from "@/data/services";
+import { getCategories, getServices } from "@/lib/api/public";
+import { getMeta } from "@/lib/categoryMeta";
+import { formatPrice } from "@/lib/api/types";
+import type { ApiCategory, ApiService } from "@/lib/api/types";
+import type { QuickViewCategory } from "@/components/services/ServiceQuickView";
 import ServiceQuickView from "@/components/services/ServiceQuickView";
 import SectionHeader from "@/components/ui/SectionHeader";
 import FadeIn from "@/components/ui/FadeIn";
-
-const categories = Object.values(servicesData);
+import HIcon from '@/components/ui/HIcon';
+import { ArrowRight01Icon } from '@hugeicons/core-free-icons';
 
 export default function FeaturedServices() {
-  const [activeId, setActiveId] = useState<string>(categories[0].id);
-  const [quickViewCat, setQuickViewCat] = useState<ServiceCategoryData | null>(null);
+  const [categories, setCategories] = useState<ApiCategory[]>([]);
+  const [activeId, setActiveId] = useState<string>("");
+  const [services, setServices] = useState<ApiService[]>([]);
+  const [loadingCats, setLoadingCats] = useState(true);
+  const [loadingSvcs, setLoadingSvcs] = useState(false);
+  const [quickView, setQuickView] = useState<{
+    category: QuickViewCategory;
+    services: ApiService[];
+  } | null>(null);
 
-  const activeCategories = categories.filter((c) => c.id === activeId);
+  // Load categories once
+  useEffect(() => {
+    getCategories()
+      .then((cats) => {
+        setCategories(cats);
+        if (cats.length > 0) setActiveId(cats[0].id);
+      })
+      .catch(() => {})
+      .finally(() => setLoadingCats(false));
+  }, []);
+
+  // Load services whenever active category changes
+  const loadServices = useCallback((categoryId: string) => {
+    setLoadingSvcs(true);
+    getServices({ category: categoryId, size: 50 })
+      .then((res) => setServices(res.content))
+      .catch(() => setServices([]))
+      .finally(() => setLoadingSvcs(false));
+  }, []);
+
+  useEffect(() => {
+    if (activeId) loadServices(activeId);
+  }, [activeId, loadServices]);
+
+  const activeCategory = categories.find((c) => c.id === activeId);
+
+  function openQuickView(cat: ApiCategory, svcs: ApiService[]) {
+    setQuickView({
+      category: { id: cat.id, name: cat.name, description: cat.description, meta: getMeta(cat.slug) },
+      services: svcs,
+    });
+  }
 
   return (
     <>
@@ -30,94 +71,64 @@ export default function FeaturedServices() {
           </FadeIn>
 
           {/* ── Category tabs ───────────────────────────────── */}
-          <FadeIn>
-            <div
-              style={{
-                display: "flex",
-                gap: 8,
-                overflowX: "auto",
-                paddingBottom: 4,
-                marginBottom: 36,
-                scrollbarWidth: "none",
-              }}
-            >
-              {categories.map((cat) => {
-                const active = activeId === cat.id;
-                return (
-                  <button
-                    key={cat.id}
-                    onClick={() => setActiveId(cat.id)}
-                    style={{
-                      flexShrink: 0,
-                      padding: "9px 20px",
-                      borderRadius: 50,
-                      border: active ? "none" : "1.5px solid #f0e4d4",
-                      background: active
-                        ? "linear-gradient(135deg, #a8865a, #c9a870)"
-                        : "transparent",
-                      color: active ? "#fff" : "#6b4c3b",
-                      fontWeight: 700,
-                      fontSize: "0.78rem",
-                      letterSpacing: "0.8px",
-                      textTransform: "uppercase",
-                      cursor: "pointer",
-                      transition: "all 0.25s ease",
-                      boxShadow: active
-                        ? "0 4px 14px rgba(168,134,90,0.35)"
-                        : "none",
-                    }}
-                  >
-                    {cat.title}
-                  </button>
-                );
-              })}
+          {!loadingCats && (
+            <FadeIn>
+              <div style={{ display: "flex", gap: 8, overflowX: "auto", paddingBottom: 4, marginBottom: 30, scrollbarWidth: "none" }}>
+                {categories.map((cat) => {
+                  const active = activeId === cat.id;
+                  return (
+                    <button
+                      key={cat.id}
+                      onClick={() => setActiveId(cat.id)}
+                      className={`chip-toggle shrink-0 px-5 py-[9px] ${
+                        active
+                          ? "border-transparent bg-brown-dark text-white shadow-[0_8px_18px_rgba(44,24,16,0.28)]"
+                          : "border-cream-dark bg-transparent text-text-secondary hover:border-gold-light hover:bg-gold-pale/35"
+                      }`}
+                    >
+                      {cat.name}
+                    </button>
+                  );
+                })}
+              </div>
+            </FadeIn>
+          )}
+
+          {/* ── Service cards ───────────────────────────────── */}
+          {loadingSvcs ? (
+            <div style={{ display: "flex", gap: 20 }}>
+              {[1, 2, 3].map((i) => (
+                <div
+                  key={i}
+                  className="soft-pulse"
+                  style={{
+                    width: 260,
+                    height: 360,
+                    borderRadius: 20,
+                    background: "#f0e4d4",
+                    flexShrink: 0,
+                    animation: "pulse 1.5s ease-in-out infinite",
+                  }}
+                />
+              ))}
             </div>
-          </FadeIn>
-
-          {/* ── Service cards for active category ───────────── */}
-          <div
-            style={{
-              overflowX: "auto",
-              scrollbarWidth: "none",
-              paddingBottom: 8,
-            }}
-          >
-            <div
-              style={{
-                display: "flex",
-                gap: 20,
-                minWidth: "max-content",
-              }}
-            >
-              {activeCategories.map((cat) => {
-                const services = cat.services
-                  ? cat.services
-                  : Object.values(cat.subcategories ?? {}).flatMap((s) => s.services);
-
-                return services.map((svc, i) => (
+          ) : (
+            <div className="card-rail">
+              <div className="card-rail-track">
+                {services.map((svc) => (
                   <ServiceCard
-                    key={`${cat.id}-${svc.name}-${i}`}
-                    name={svc.name}
-                    price={svc.price}
-                    image={svc.image}
-                    category={cat}
-                    subcategory={
-                      cat.subcategories
-                        ? Object.values(cat.subcategories).find((sub) =>
-                            sub.services.some((s) => s.name === svc.name)
-                          )?.label
-                        : undefined
-                    }
-                    onQuickView={() => setQuickViewCat(cat)}
+                    key={svc.id}
+                    svc={svc}
+                    category={activeCategory!}
+                    onQuickView={() => openQuickView(activeCategory!, services)}
                   />
-                ));
-              })}
+                ))}
+              </div>
             </div>
-          </div>
+          )}
 
-          {/* ── Footer link ─────────────────────────────────── */}
           <FadeIn>
-            <div style={{ marginTop: 40, textAlign: "center" }}>
+            <div className="motion-fade-up" style={{ marginTop: 40, textAlign: "center" }}>
               <Link href="/services" className="btn btn-primary">
                 View Full Service Menu
               </Link>
@@ -127,177 +138,69 @@ export default function FeaturedServices() {
       </section>
 
       <ServiceQuickView
-        isOpen={!!quickViewCat}
-        onClose={() => setQuickViewCat(null)}
-        category={quickViewCat}
+        isOpen={!!quickView}
+        onClose={() => setQuickView(null)}
+        category={quickView?.category ?? null}
+        services={quickView?.services ?? []}
       />
     </>
   );
 }
 
-/* ── Individual service card ─────────────────────────────────── */
+/* ── Service card ────────────────────────────────────────────── */
 function ServiceCard({
-  name,
-  price,
-  image,
+  svc,
   category,
-  subcategory,
   onQuickView,
 }: {
-  name: string;
-  price: string;
-  image: string;
-  category: ServiceCategoryData;
-  subcategory?: string;
+  svc: ApiService;
+  category: ApiCategory;
   onQuickView: () => void;
 }) {
-  const bookValue = subcategory
-    ? `${category.title} › ${subcategory} › ${name}`
-    : `${category.title} › ${name}`;
-  const bookHref = `/booking?service=${encodeURIComponent(bookValue)}`;
+  const meta = getMeta(category?.slug ?? "");
+  const bg = svc.imageUrl ?? meta.coverImage;
+  const bookHref = `/booking?service=${encodeURIComponent(`${category?.name ?? ""} › ${svc.name}`)}`;
 
   return (
     <div
-      className="group"
-      style={{
-        position: "relative",
-        width: 260,
-        height: 360,
-        borderRadius: 20,
-        overflow: "hidden",
-        flexShrink: 0,
-        cursor: "default",
-      }}
+      className="group motion-fade-up surface-card relative h-[360px] w-[260px] shrink-0 overflow-hidden rounded-spa-lg border-0"
     >
-      {/* Background */}
       <div
-        style={{
-          position: "absolute",
-          inset: 0,
-          background: category.gradient,
-          transition: "transform 0.5s ease",
-        }}
-        className="group-hover:scale-105"
+        style={{ position: "absolute", inset: 0, background: meta.gradient }}
+        className="scale-100 will-change-transform transition-transform duration-700 ease-smooth group-hover:scale-[1.08]"
       >
-        <Image
-          src={image}
-          alt={name}
-          fill
-          style={{ objectFit: "cover", opacity: 0.65 }}
-          unoptimized
-        />
+        <Image src={bg} alt={svc.name} fill style={{ objectFit: "cover", opacity: 0.65 }} unoptimized />
       </div>
 
-      {/* Dark overlay */}
-      <div
-        style={{
-          position: "absolute",
-          inset: 0,
-          background: "linear-gradient(to top, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.15) 55%, transparent 100%)",
-        }}
-      />
+      <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to top, rgba(0,0,0,0.78) 0%, rgba(0,0,0,0.1) 55%, transparent 100%)" }} />
 
-      {/* Content */}
-      <div
-        style={{
-          position: "relative",
-          zIndex: 2,
-          height: "100%",
-          display: "flex",
-          flexDirection: "column",
-          padding: "20px 20px 22px",
-        }}
-      >
-        {/* Category badge */}
-        <div
-          style={{
-            alignSelf: "flex-start",
-            background: "rgba(255,255,255,0.18)",
-            backdropFilter: "blur(6px)",
-            border: "1px solid rgba(255,255,255,0.25)",
-            borderRadius: 20,
-            padding: "4px 12px",
-            fontSize: "0.68rem",
-            fontWeight: 700,
-            color: "#fff",
-            letterSpacing: "0.5px",
-            textTransform: "uppercase",
-          }}
-        >
-          {category.title}
-        </div>
-
-        {/* Service name + price */}
+      <div style={{ position: "relative", zIndex: 2, height: "100%", display: "flex", flexDirection: "column", padding: "18px 20px 22px" }}>
         <div style={{ marginTop: "auto" }}>
-          <h3
-            style={{
-              fontFamily: "var(--font-playfair, serif)",
-              fontSize: "1.15rem",
-              fontWeight: 700,
-              color: "#fff",
-              marginBottom: 6,
-              lineHeight: 1.3,
-              textShadow: "0 2px 8px rgba(0,0,0,0.4)",
-            }}
-          >
-            {name}
+          <h3 style={{ fontFamily: "var(--font-serif)", fontSize: "1.1rem", fontWeight: 700, color: "#fff", marginBottom: 4, lineHeight: 1.3, textShadow: "0 2px 8px rgba(0,0,0,0.4)" }}>
+            {svc.name}
           </h3>
-          <p
-            style={{
-              fontSize: "1rem",
-              fontWeight: 700,
-              color: "#edd9b8",
-              marginBottom: 18,
-              fontFamily: "var(--font-playfair, serif)",
-            }}
-          >
-            {price}
+          <p className="mb-2 line-clamp-2 text-[0.74rem] leading-relaxed text-white/80">
+            {svc.description ?? 'Your skin and body reset, tailored by our specialists.'}
+          </p>
+          <p style={{ fontFamily: "var(--font-serif)", fontWeight: 700, fontSize: "1rem", color: "#edd9b8", marginBottom: 18 }}>
+            {formatPrice(svc)}
           </p>
 
-          {/* Two buttons — slide up on hover */}
           <div
-            className="translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100"
-            style={{ display: "flex", gap: 8, transition: "all 0.3s ease" }}
+            className="flex gap-2 transition-all duration-300 ease-out max-md:translate-y-0 max-md:opacity-100 md:translate-y-4 md:opacity-0 md:group-hover:translate-y-0 md:group-hover:opacity-100"
           >
             <Link
               href={bookHref}
-              style={{
-                flex: 1,
-                textAlign: "center",
-                background: "linear-gradient(135deg, #a8865a, #c9a870)",
-                color: "#fff",
-                padding: "10px 0",
-                borderRadius: 50,
-                fontSize: "0.78rem",
-                fontWeight: 700,
-                letterSpacing: "0.4px",
-                textDecoration: "none",
-                transition: "opacity 0.2s",
-              }}
+              className="flex-1 rounded-full bg-linear-to-br from-gold-dark to-gold py-[10px] text-center text-[0.78rem] font-bold tracking-[0.4px] text-white transition-transform duration-200 ease-out hover:scale-[1.02] active:scale-[0.98]"
             >
               Book Now
             </Link>
             <button
               onClick={onQuickView}
-              aria-label="Quick view"
-              style={{
-                width: 40,
-                height: 40,
-                borderRadius: "50%",
-                background: "rgba(255,255,255,0.2)",
-                backdropFilter: "blur(6px)",
-                border: "1px solid rgba(255,255,255,0.3)",
-                color: "#fff",
-                cursor: "pointer",
-                fontSize: "1rem",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                flexShrink: 0,
-                transition: "background 0.2s",
-              }}
+              aria-label="Open quick view"
+              className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-white/30 bg-white/20 text-white backdrop-blur-[6px] transition-all duration-200 hover:scale-105 hover:bg-white/30 active:scale-95"
             >
-              ⓘ
+              <HIcon icon={ArrowRight01Icon} size={18} strokeWidth={1.8} />
             </button>
           </div>
         </div>

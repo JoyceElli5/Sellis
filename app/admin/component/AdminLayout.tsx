@@ -1,17 +1,20 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
+import { getToken, clearToken } from '@/lib/api/admin';
+import HIcon from '@/components/ui/HIcon';
+import { Calendar01Icon, Globe02Icon, Home01Icon, Megaphone01Icon, Menu01Icon, Settings01Icon, SparklesIcon } from '@hugeicons/core-free-icons';
 
 /* ── Nav items ─────────────────────────────────────────────── */
 const navItems = [
-  { href: '/admin',                icon: '🏠', label: 'Dashboard' },
-  { href: '/admin/bookings',       icon: '📅', label: 'Bookings' },
-  { href: '/admin/services',       icon: '✨', label: 'Services' },
-  { href: '/admin/announcement',   icon: '📢', label: 'Announcements' },
-  { href: '/admin/settings',       icon: '⚙️', label: 'Settings' },
+  { href: '/admin',                icon: Home01Icon, label: 'Dashboard' },
+  { href: '/admin/bookings',       icon: Calendar01Icon, label: 'Bookings' },
+  { href: '/admin/services',       icon: SparklesIcon, label: 'Services' },
+  { href: '/admin/announcement',   icon: Megaphone01Icon, label: 'Announcements' },
+  { href: '/admin/settings',       icon: Settings01Icon, label: 'Settings' },
 ];
 
 /* ── Types ─────────────────────────────────────────────────── */
@@ -22,8 +25,19 @@ interface AdminLayoutProps {
 /* ── Component ─────────────────────────────────────────────── */
 export default function AdminLayout({ children }: AdminLayoutProps) {
   const pathname          = usePathname();
+  const router            = useRouter();
   const [collapsed, setCollapsed] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+
+  // Auth guard
+  useEffect(() => {
+    if (!getToken()) router.replace('/admin/login');
+  }, [router]);
+
+  function handleLogout() {
+    clearToken();
+    router.replace('/admin/login');
+  }
 
   return (
     <div style={styles.shell}>
@@ -64,7 +78,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
                   justifyContent: collapsed ? 'center' : 'flex-start',
                 }}
               >
-                <span style={styles.navIcon}>{item.icon}</span>
+                <span style={styles.navIcon}><HIcon icon={item.icon} size={18} strokeWidth={1.8} /></span>
                 {!collapsed && <span style={styles.navLabel}>{item.label}</span>}
                 {active && <span style={styles.activeDot} />}
               </Link>
@@ -90,7 +104,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
           }}
           title={collapsed ? 'Back to site' : undefined}
         >
-          <span>🌐</span>
+          <span><HIcon icon={Globe02Icon} size={18} strokeWidth={1.8} /></span>
           {!collapsed && <span>View Site</span>}
         </Link>
       </aside>
@@ -106,7 +120,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
             onClick={() => setMobileOpen((v) => !v)}
             aria-label="Toggle menu"
           >
-            ☰
+            <HIcon icon={Menu01Icon} size={20} strokeWidth={1.8} />
           </button>
 
           {/* Page title derived from pathname */}
@@ -127,6 +141,9 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
                 weekday: 'short', day: 'numeric', month: 'long',
               })}
             </div>
+            <button onClick={handleLogout} style={styles.logoutBtn} title="Sign out">
+              Sign out
+            </button>
             <div style={styles.avatar} title="Admin">A</div>
           </div>
         </header>
@@ -160,14 +177,14 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
                     onClick={() => setMobileOpen(false)}
                     style={{ ...styles.navLink, ...(active ? styles.navLinkActive : {}) }}
                   >
-                    <span style={styles.navIcon}>{item.icon}</span>
+                    <span style={styles.navIcon}><HIcon icon={item.icon} size={18} strokeWidth={1.8} /></span>
                     <span style={styles.navLabel}>{item.label}</span>
                   </Link>
                 );
               })}
             </nav>
             <Link href="/" style={styles.backLink} onClick={() => setMobileOpen(false)}>
-              <span>🌐</span><span>View Site</span>
+              <span><HIcon icon={Globe02Icon} size={18} strokeWidth={1.8} /></span><span>View Site</span>
             </Link>
           </aside>
         </div>
@@ -305,6 +322,18 @@ const styles: Record<string, React.CSSProperties> = {
     fontSize: '0.78rem', color: 'var(--text-light, #9E7B68)',
     fontWeight: 600,
   },
+  logoutBtn: {
+    padding: '6px 14px',
+    borderRadius: 8,
+    border: '1.5px solid var(--cream-dark, #F0E4D4)',
+    background: 'transparent',
+    color: 'var(--text-light, #9E7B68)',
+    fontSize: '0.75rem',
+    fontWeight: 600,
+    cursor: 'pointer',
+    transition: 'all 0.2s',
+  },
+
   avatar: {
     width: 36, height: 36, borderRadius: '50%',
     background: 'linear-gradient(135deg, var(--gold-dark,#A8865A), var(--gold,#C9A870))',

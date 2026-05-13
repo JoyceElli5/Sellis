@@ -1,5 +1,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
+import HIcon from '@/components/ui/HIcon';
+import { Facebook01Icon, InstagramIcon, WhatsappIcon, MapPinIcon, Call02Icon, Time01Icon, HeartCheckIcon } from '@hugeicons/core-free-icons';
 
 const serviceLinks = [
   { href: '/services#cat-hair', label: 'Hair Services' },
@@ -41,16 +43,16 @@ export default function Footer() {
               rel="noopener noreferrer"
               aria-label="Instagram"
             >
-              📷
+              <HIcon icon={InstagramIcon} size={18} strokeWidth={1.8} />
             </a>
             <a
-              href="https://wa.me/233XXXXXXXXX"
+              href="https://wa.me/233593247781"
               className="flex h-9 w-9 items-center justify-center rounded-full border border-white/10 bg-white/[0.07] text-[0.9rem] text-white/65 transition-all hover:-translate-y-1 hover:border-gold hover:bg-gold hover:text-white"
               target="_blank"
               rel="noopener noreferrer"
               aria-label="WhatsApp"
             >
-              💬
+              <HIcon icon={WhatsappIcon} size={18} strokeWidth={1.8} />
             </a>
             <a
               href="https://facebook.com/sellisbeautyspa"
@@ -59,7 +61,7 @@ export default function Footer() {
               rel="noopener noreferrer"
               aria-label="Facebook"
             >
-              📘
+              <HIcon icon={Facebook01Icon} size={18} strokeWidth={1.8} />
             </a>
           </div>
         </div>
@@ -107,15 +109,15 @@ export default function Footer() {
           </h5>
           <ul className="flex list-none flex-col gap-3 text-[0.83rem] leading-relaxed text-white/50">
             <li className="flex items-start gap-2.5">
-              <span className="mt-0.5 shrink-0 text-gold">📍</span>
+              <span className="mt-0.5 shrink-0 text-gold"><HIcon icon={MapPinIcon} size={18} strokeWidth={1.8} /></span>
               <span>Accra, Ghana</span>
             </li>
             <li className="flex items-start gap-2.5">
-              <span className="mt-0.5 shrink-0 text-gold">📞</span>
-              <span>+233 XX XXX XXXX</span>
+              <span className="mt-0.5 shrink-0 text-gold"><HIcon icon={Call02Icon} size={18} strokeWidth={1.8} /></span>
+              <span>+233593247781</span>
             </li>
             <li className="flex items-start gap-2.5">
-              <span className="mt-0.5 shrink-0 text-gold">📷</span>
+              <span className="mt-0.5 shrink-0 text-gold"><HIcon icon={InstagramIcon} size={18} strokeWidth={1.8} /></span>
               <a
                 href="https://instagram.com/sellisbeautyspa"
                 className="text-white/50 transition-colors hover:text-gold-light"
@@ -126,7 +128,7 @@ export default function Footer() {
               </a>
             </li>
             <li className="flex items-start gap-2.5">
-              <span className="mt-0.5 shrink-0 text-gold">🕐</span>
+              <span className="mt-0.5 shrink-0 text-gold"><HIcon icon={Time01Icon} size={18} strokeWidth={1.8} /></span>
               <span>
                 Mon–Sat: 8am – 8pm
                 <br />
@@ -137,11 +139,13 @@ export default function Footer() {
         </div>
       </div>
 
-      <div className="container flex flex-wrap items-center justify-between gap-2.5 border-t border-white/[0.08] py-5 max-md:flex-col max-md:text-center">
-        <p className="text-[0.76rem] text-white/[0.38]">
+      <div className="container flex flex-wrap items-center justify-between gap-2.5 border-t border-white/8 py-5 max-md:flex-col max-md:text-center">
+        <p className="text-[0.76rem] text-white/38">
           &copy; {new Date().getFullYear()} Sellis Beauty Spa. All rights reserved.
         </p>
-        <p className="text-[0.76rem] text-white/[0.38]">Crafted with 💛 for beauty lovers</p>
+        <p className="flex items-center gap-1.5 text-[0.76rem] text-white/38">
+          Crafted with <HIcon icon={HeartCheckIcon} size={14} strokeWidth={1.8} className="text-gold" /> for beauty lovers
+        </p>
       </div>
     </footer>
   );
