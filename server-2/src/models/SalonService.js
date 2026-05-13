@@ -29,7 +29,7 @@ const salonServiceSchema = new mongoose.Schema(
     active: { type: Boolean, default: true },
     imageUrl: { type: String },
   },
-  { timestamps: true, collection: "services" }
+  { timestamps: true, collection: "services", toJSON: { virtuals: true } }
 );
 
 salonServiceSchema.index({ categoryId: 1, active: 1 });

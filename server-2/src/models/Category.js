@@ -8,7 +8,7 @@ const categorySchema = new mongoose.Schema(
     active: { type: Boolean, default: true },
     displayOrder: { type: Number, default: 0 },
   },
-  { timestamps: true, collection: "categories" }
+  { timestamps: true, collection: "categories", toJSON: { virtuals: true } }
 );
 
 module.exports = mongoose.model("Category", categorySchema);

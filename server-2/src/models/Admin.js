@@ -7,7 +7,7 @@ const adminSchema = new mongoose.Schema(
     name: { type: String },
     role: { type: String, default: "ADMIN" },
   },
-  { timestamps: true, collection: "admins" }
+  { timestamps: true, collection: "admins", toJSON: { virtuals: true } }
 );
 
 module.exports = mongoose.model("Admin", adminSchema);
