@@ -12,7 +12,7 @@ export default function ServiceItem({ service, category, subcategory }: ServiceI
     ? `${category} › ${subcategory} › ${service.name}`
     : `${category} › ${service.name}`;
   const href = `/booking?service=${encodeURIComponent(bookingValue)}`;
-
+// random comment to trigger redeploy
   return (
     <div className="flex flex-col gap-2 rounded-spa-md border border-cream-dark bg-white px-5 py-5 transition-all duration-300 hover:-translate-y-1 hover:border-gold-light hover:shadow-spa-md">
       <div className="flex-1 font-serif text-[0.94rem] font-semibold text-text-primary">{service.name}</div>
