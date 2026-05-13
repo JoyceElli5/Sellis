@@ -8,6 +8,7 @@ import type {
   ServicePayload,
   CategoryPayload,
 } from './types';
+import { normalizeService, normalizeCategory } from './normalize';
 
 /* ── Auth ───────────────────────────────────────────────────── */
 
@@ -37,7 +38,7 @@ export function getToken(): string | null {
 
 export async function adminGetCategories(): Promise<ApiCategory[]> {
   const { data } = await apiClient.get<ApiResponse<ApiCategory[]>>('/api/categories');
-  return data.data;
+  return data.data.map(normalizeCategory);
 }
 
 export async function createCategory(payload: CategoryPayload): Promise<ApiCategory> {
@@ -45,7 +46,7 @@ export async function createCategory(payload: CategoryPayload): Promise<ApiCateg
     '/api/admin/categories',
     payload
   );
-  return data.data;
+  return normalizeCategory(data.data);
 }
 
 export async function updateCategory(id: string, payload: CategoryPayload): Promise<ApiCategory> {
@@ -53,7 +54,7 @@ export async function updateCategory(id: string, payload: CategoryPayload): Prom
     `/api/admin/categories/${id}`,
     payload
   );
-  return data.data;
+  return normalizeCategory(data.data);
 }
 
 export async function deleteCategory(id: string): Promise<void> {
@@ -72,7 +73,7 @@ export async function adminGetServices(params?: {
     '/api/services',
     { params }
   );
-  return data.data;
+  return { ...data.data, content: data.data.content.map(normalizeService) };
 }
 
 export async function createService(payload: ServicePayload): Promise<ApiService> {
@@ -80,7 +81,7 @@ export async function createService(payload: ServicePayload): Promise<ApiService
     '/api/admin/services',
     payload
   );
-  return data.data;
+  return normalizeService(data.data);
 }
 
 export async function updateService(id: string, payload: ServicePayload): Promise<ApiService> {
@@ -88,7 +89,7 @@ export async function updateService(id: string, payload: ServicePayload): Promis
     `/api/admin/services/${id}`,
     payload
   );
-  return data.data;
+  return normalizeService(data.data);
 }
 
 export async function deleteService(id: string): Promise<void> {
