@@ -1,6 +1,10 @@
 import type { Metadata } from 'next';
 import Script from 'next/script';
 import Hero from '@/components/home/Hero';
+// import Intro from '@/components/home/Intro';
+import FeaturedServices from '@/components/home/FeaturedServices';
+// import WhyUs from '@/components/home/WhyUs';
+// import Testimonials from '@/components/home/Testimonials';
 import FeaturedServices from '@/components/home/FeaturedServices';
 import WhyUs from '@/components/home/WhyUs';
 import CtaSection from '@/components/home/CtaSection';
