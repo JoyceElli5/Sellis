@@ -19,6 +19,10 @@ app.use(
 );
 app.use(express.json());
 
+app.get("/", (req, res) => {
+  res.json({ success: true, message: "Sellis API", status: "running" });
+});
+
 app.use("/api/auth", authRoutes);
 app.use("/api/health", healthRoutes);
 app.use("/api", publicRoutes);
