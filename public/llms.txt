@@ -1,0 +1,21 @@
+# Sellis Beauty Spa
+
+> Luxury beauty, hair, spa, nails, waxing, and lash treatments in Accra, Ghana. Appointments are confirmed via WhatsApp.
+
+Sellis Beauty Spa is a premium beauty and wellness destination offering over 50 treatments across 6 service categories. Every service is delivered by a skilled team in a tranquil, elegant space. Prices are in Ghana Cedis (GH₵).
+
+## Pages
+
+- [Home](https://www.sellisspa.com/): Introduction to the spa, featured services, and a call-to-action to book.
+- [Services & Pricing](https://www.sellisspa.com/services): Full treatment catalog with prices for all categories — Hair Services, Facials, SPA Services, Nails, Waxing, and Lashes & Brows.
+- [Book an Appointment](https://www.sellisspa.com/booking): Appointment request form. Bookings are confirmed by the team via WhatsApp.
+- [Contact](https://www.sellisspa.com/contact): Location in Accra, Ghana. Contact via WhatsApp or Instagram.
+
+## Service Categories
+
+- **Hair Services**: Relaxing, washing, cornrow (own hair / with extension), hair treatment, ponytail, installation, braiding.
+- **Facials**: Deep cleansing facial, dermaplaning.
+- **SPA Services**: Swedish massage (60 min), deep tissue massage, hot stone massage, aromatherapy massage, back massage (30 min), foot massage (30 min), wood therapy.
+- **Nails**: Classic pedicure, manicure, pedicure with gel polish, stick-on nails, stick-on with gel polish, acrylic nails, acrylic refill.
+- **Waxing**: Full/half leg, full/half arm, bikini, Brazilian, underarm, upper lip, chin, full face, back, chest.
+- **Lashes & Brows**: Eyelash extensions (classic / hybrid / volume set), eyelash refill, lash lift, lash removal, brow lamination, brow tint, brow wax & shape, brow combo.
