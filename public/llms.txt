@@ -6,10 +6,10 @@ Sellis Beauty Spa is a premium beauty and wellness destination offering over 50 
 
 ## Pages
 
-- [Home](https://sellisbeautyspa.com/): Introduction to the spa, featured services, and a call-to-action to book.
-- [Services & Pricing](https://sellisbeautyspa.com/services): Full treatment catalog with prices for all categories — Hair Services, Facials, SPA Services, Nails, Waxing, and Lashes & Brows.
-- [Book an Appointment](https://sellisbeautyspa.com/booking): Appointment request form. Bookings are confirmed by the team via WhatsApp.
-- [Contact](https://sellisbeautyspa.com/contact): Location in Accra, Ghana. Contact via WhatsApp or Instagram.
+- [Home](https://www.sellisspa.com/): Introduction to the spa, featured services, and a call-to-action to book.
+- [Services & Pricing](https://www.sellisspa.com/services): Full treatment catalog with prices for all categories — Hair Services, Facials, SPA Services, Nails, Waxing, and Lashes & Brows.
+- [Book an Appointment](https://www.sellisspa.com/booking): Appointment request form. Bookings are confirmed by the team via WhatsApp.
+- [Contact](https://www.sellisspa.com/contact): Location in Accra, Ghana. Contact via WhatsApp or Instagram.
 
 ## Service Categories
 
